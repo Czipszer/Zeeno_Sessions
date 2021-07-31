@@ -1,0 +1,14 @@
+[requires]
+mosquitto/2.0.11
+yaml-cpp/0.7.0
+
+[generators]
+cmake_multi
+
+[options]
+mosquitto:shared=True
+yaml-cpp:shared=True
+
+[imports]
+bin, *.dll -> ./out/bin
+lib, *.dylib* -> ./out/bin
