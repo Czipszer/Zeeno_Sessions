@@ -1,0 +1,6 @@
+---
+Checks:                'modernize-*,cppcoreguidelines-*,bugprone-*,readability-*,portability-*,-modernize-use-trailing-return-type'
+WarningsAsErrors:      ''
+HeaderFilterRegex:     ''
+AnalyzeTemporaryDtors: false
+FormatStyle:           'file'

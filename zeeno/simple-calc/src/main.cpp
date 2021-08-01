@@ -20,11 +20,11 @@ const std::unordered_map<std::string, std::function<CalculatorType(const Calcula
 	     return std::pow(a, b);
      }}};
 
-int main(int argc, char* argv[]) {
+int main() {
 	try {
-		CalculatorType a  = readFromCin<CalculatorType>("First number: ");
-		std::string    op = readFromCin<std::string>("Op (+, -, *, /, pow) is: ");
-		CalculatorType b  = readFromCin<CalculatorType>("Second number: ");
+		auto a  = readFromCin<CalculatorType>("First number: ");
+		auto op = readFromCin<std::string>("Op (+, -, *, /, pow) is: ");
+		auto b  = readFromCin<CalculatorType>("Second number: ");
 
 		if (!operations.contains(op)) {
 			throw std::runtime_error("Unknown operation");
