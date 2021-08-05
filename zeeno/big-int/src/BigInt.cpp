@@ -86,7 +86,11 @@ char nibble2char(std::uint8_t nibble) {
 	throw("Not a nibble value");
 }
 
-BigInt::BigInt(std::string_view s, Base b) {
+BigInt::BigInt(std::uint64_t l) {
+	_data.push_back(l);
+}
+
+BigInt::BigInt(std::string s, Base b) {
 	if (b != Base::Hex) {
 		throw std::runtime_error("Only a hex base is supported");
 	}
@@ -106,32 +110,75 @@ BigInt::BigInt(std::string_view s, Base b) {
 	}
 }
 
-BigInt BigInt::operator+(BigInt other) {
-	BigInt ret; // Create an object we will return
+BigInt BigInt::operator+(BigInt other) const {
+	BigInt result; // Create an object we will return
+	BigInt self{*this};
 
-	const size_t safeSize = std::max(_data.size(), other._data.size()) + 1;
-	_data.resize(safeSize);
+	const size_t safeSize = std::max(self._data.size(), other._data.size()) + 1;
+	self._data.resize(safeSize);
 	other._data.resize(safeSize);
-	ret._data.resize(safeSize);
+	result._data.resize(safeSize);
 
 	// Normal version
 	Type carry{0};
 
 	for (size_t i{0}; i < safeSize; ++i) {
-		Type a      = _data[i];
-		Type b      = other._data[i];
-		Type result = a + b + carry;
+		Type a         = self._data[i];
+		Type b         = other._data[i];
+		Type addResult = a + b + carry;
 
 		if (carry == 0) {
-			carry = ((result < a || result < b) ? 1 : 0);
+			carry = ((addResult < a || addResult < b) ? 1 : 0);
 		} else {
-			carry = ((result <= a || result <= b) ? 1 : 0);
+			carry = ((addResult <= a || addResult <= b) ? 1 : 0);
 		}
 
-		ret._data[i] = result;
+		result._data[i] = addResult;
 	}
 
-	return ret.normalize();
+	return result.normalize();
+}
+
+BigInt BigInt::operator*(std::uint64_t multiplier) const {
+	if (multiplier == 0) {
+		return {0};
+	}
+
+	BigInt result{*this};
+	while (--multiplier) {
+		result = result + *this;
+	}
+	return result;
+}
+
+BigInt BigInt::operator/(std::uint64_t divisor) const {
+	if (divisor != 2) {
+		throw std::runtime_error("You can divide only by number 2");
+	}
+
+	BigInt result{*this};
+	Type   bit{0};
+	for (size_t i{result._data.size()}; i; --i) {
+		result._data[i - 1] = (result._data[i - 1] >> 1) + bit;
+		bit                 = (result._data[i - 1] & 0x1) << (bits - 1);
+	}
+	return result;
+}
+
+std::uint64_t BigInt::operator%(std::uint64_t divisor) const {
+	if (divisor != 2) {
+		throw std::runtime_error("You can use modulo only with number 2");
+	}
+
+	if (_data.empty()) {
+		return 0;
+	}
+
+	return _data[0] & 0x1;
+}
+
+bool BigInt::operator==(const BigInt& other) const {
+	return other._data == _data;
 }
 
 std::string BigInt::to_string(Base b) const {

@@ -17,36 +17,24 @@
 class BigInt {
 public:
 	enum class Base { Hex };
-	/*
-	Constructors are important functions. They are called when you initialize the class.
-	So if you write
-	{
-		BigInt a{};
-	}
-	then the first constructor is called and if you write
-	{
-		BigInt a{123456};
-	}
-	then the second constructor is called.
-	*/
+
 	BigInt() = default;
-	BigInt(std::string_view, Base);
+	BigInt(std::uint64_t);
+	BigInt(std::string, Base = Base::Hex);
 
-	/**
- 	  * Allow addition of two BigInt
-	  */
-	BigInt operator+(BigInt other);
+	BigInt        operator+(BigInt other) const;
+	BigInt        operator*(std::uint64_t) const;
+	BigInt        operator/(std::uint64_t) const;
+	std::uint64_t operator%(std::uint64_t) const;
+	bool          operator==(const BigInt&) const;
 
-	/**
-	  * Allow to make a string out of the number
-	  */
 	std::string to_string(Base) const;
-
-	BigInt& normalize();
+	BigInt&     normalize();
 
 private:
 	using Type                         = std::uint64_t;
 	static constexpr size_t bytes      = sizeof(Type);
+	static constexpr size_t bits       = bytes * 8;
 	static constexpr Type   max        = std::numeric_limits<Type>::max();
 	static constexpr Type   highNibble = max - (max >> 4);
 
