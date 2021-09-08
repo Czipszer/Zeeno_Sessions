@@ -6,14 +6,14 @@ The purpose of this software will be to connect to MQTT broker, subscribe to the
 ## MQTT client
 Mqtt client implementations (choose one)
 - paho-mqtt-c
-- paho-mqtt-cpp
+- paho-mqtt-cpp - bolci
 - mosquitto
 
 ## Configuration file format
 Configuration technologies (choose one)
 - YAML
 - JSON
-- TOML
+- TOML - bolci
 
 ## Starting a project
 
