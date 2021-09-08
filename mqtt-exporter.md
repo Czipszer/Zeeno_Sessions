@@ -5,14 +5,14 @@ The purpose of this software will be to connect to MQTT broker, subscribe to the
 
 ## MQTT client
 Mqtt client implementations (choose one)
-- paho-mqtt-c
+- paho-mqtt-c - Chip
 - paho-mqtt-cpp
 - mosquitto
 
 ## Configuration file format
 Configuration technologies (choose one)
 - YAML
-- JSON
+- JSON - Chip
 - TOML
 
 ## Starting a project
