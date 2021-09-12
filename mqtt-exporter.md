@@ -5,26 +5,29 @@ The purpose of this software will be to connect to MQTT broker, subscribe to the
 
 ## MQTT client
 Mqtt client implementations (choose one)
-- paho-mqtt-c
-- paho-mqtt-cpp
-- mosquitto
+- paho-mqtt-c - Chip
+- paho-mqtt-cpp - bolci, Mliko
+- mosquitto - Rainy
 
 ## Configuration file format
 Configuration technologies (choose one)
-- YAML
-- JSON
-- TOML
+- YAML - Rainy, Mliko
+- JSON - Chip
+- TOML - bolci
 
-## Starting a project
+## Making a project
 
-1. Search for the libraries on https://conan.io/center/ and write it to your conanfile.txt, then run file `conan_install.<bat|sh>`
-1. Learn about MQTT, how it operates
-1. Design an application architecture
-    - components
-	- classes
-	- communication diagram
-	- responsibilities
-1. Get feedback
+1. Search for the libraries on https://conan.io/center/ and write it to your conanfile.txt, then run file `conan_install.<bat|sh>` (2021-09-15)
+1. Learn about your configuration file format and implement simple file loading (2021-09-19)
+1. Learn about Prometheus and it's data types, implement type Counter (2021-09-26)
+  - https://prometheus.io/docs/concepts/metric_types/ 
+  - https://prometheus.io/docs/instrumenting/exposition_formats/
+  - https://github.com/OpenObservability/OpenMetrics/blob/main/specification/OpenMetrics.md
+1. Implement an output module that is able to manage many Prometheus types and output them into a file (path is configurable). Implement the rest of Prometheus types. (2021-10-3)
+1. Make output period of the file configurable. (2021-10-10)
+1. Learn about your MQTT client implementation and connect to the server. Subscribe and publish values. (2021-10-17)
+1. Read from configuration file a list of topics to subscribe to. Parse the message and topic by a regex and print it on the screen. (2021-10-24)
+1. Finish the project (2021-11-01)
 
 ## Requirements
 - Configurable MQTT server
