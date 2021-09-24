@@ -1,17 +1,19 @@
+#include <cstdlib>
 #include <iostream>
 #include <memory>
 #include <string>
 #include <vector>
 
+#include "MQTTAsync.h"
 #include "main.hpp"
 
 using namespace std;
 
 int main() {
 	try {
-		return 0;
+		return EXIT_SUCCESS;
 	} catch (const exception& e) {
 		cerr << e.what();
-		return 1;
+		return EXIT_FAILURE;
 	}
 }
