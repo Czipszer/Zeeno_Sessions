@@ -97,15 +97,21 @@ BigInt::BigInt(const std::string& num) {
 
 // Relational operators:
 bool BigInt::operator==(const BigInt& num) const {
-	return *this == num.get_value();
+	bool temp;
+	temp = this->get_value() == num.get_value();
+	return temp;
 }
 
-bool BigInt::operator==(const uint64_t& num) const {
-	return *this == BigInt(num);
+bool BigInt::operator==(const uint64_t num) const {
+	bool temp;
+	temp = *this == BigInt(num);
+	return temp;
 }
 
 bool BigInt::operator==(const string& num) const {
-	return *this == BigInt(num);
+	bool temp;
+	temp = *this == BigInt(num);
+	return temp;
 }
 
 // Binary arithmetic operators:

@@ -25,7 +25,7 @@ public:
 
 	// Relational operators:
 	bool operator==(const BigInt&) const;
-	bool operator==(const uint64_t&) const;
+	bool operator==(const uint64_t) const;
 	bool operator==(const std::string&) const;
 
 	// Binary arithmetic operators:
