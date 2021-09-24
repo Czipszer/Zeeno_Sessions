@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 
-
 #include "BigInt.hpp"
 
 using namespace std;
@@ -12,14 +11,15 @@ using namespace std;
 bool BigInt::is_valid_number(const string& num) {
 	for (char digit : num) {
 		if (digit < '0' or digit > '9') {
-			return (false);
+			return false;
 		}
 	}
-	return (true);
+	return true;
 }
 
 void BigInt::add_leading_zeroes(string& num, size_t num_zeroes) const {
-	num = string(num_zeroes, '0') + num;
+	string temp(num_zeroes, '0');
+	num = temp + num;
 }
 
 void BigInt::strip_leading_zeroes(string& num) const {
@@ -52,29 +52,31 @@ tuple<string, string> BigInt::get_larger_and_smaller(const string& num1, const s
 	// pad the smaller number with zeroes
 	add_leading_zeroes(smaller, larger.size() - smaller.size());
 
-	return (make_tuple(larger, smaller));
+	return make_tuple(larger, smaller);
 }
 
 string BigInt::reverse_string(const string& reverse) const {
-	string reversed{""};
+	string reversed;
 
 	for (long i = reverse.size() - 1; i >= 0; i--) {
 		reversed.push_back(reverse[i]);
 	}
 
-	return (reversed);
+	return reversed;
 }
 
 string BigInt::get_value() const {
-	return (value);
+	return value;
 }
 
 // Constructors:
+/* It is define as default
 BigInt::BigInt(const BigInt& num) {
 	value = num.value;
 }
+*/
 
-BigInt::BigInt(const uint64_t& num) {
+BigInt::BigInt(const uint64_t num) {
 	value = to_string(num);
 }
 
@@ -95,28 +97,29 @@ BigInt::BigInt(const std::string& num) {
 
 // Relational operators:
 bool BigInt::operator==(const BigInt& num) const {
-	return (this->value == num.get_value());
+	return *this == num.get_value();
 }
 
 bool BigInt::operator==(const uint64_t& num) const {
-	return (*this == BigInt(num));
+	return *this == BigInt(num);
 }
 
 bool BigInt::operator==(const string& num) const {
-	return (*this == BigInt(num));
+	return *this == BigInt(num);
 }
 
 // Binary arithmetic operators:
 BigInt BigInt::operator+(const BigInt& num) const {
 	// identify the numbers as `larger` and `smaller`
 	string larger, smaller;
-	tie(larger, smaller) = get_larger_and_smaller(this->value, num.get_value());
+	tie(larger, smaller) = get_larger_and_smaller(this->get_value(), num.get_value());
 
 	BigInt    result{""}; // the resultant sum and the value is cleared as the digits will be appended
-	short int carry = 0, sum;
+	short int carry{0};
 
 	// add the two values
 	for (long i = larger.size() - 1; i >= 0; i--) { //Warning co stím -> inicializování: Převod z: size_t na: long, může dojít ke ztrátě dat.MSVC(C4267)
+		short int sum{0};
 		sum          = larger[i] - '0' + smaller[i] - '0' + carry;
 		result.value = to_string(sum % 10) + result.value;
 		carry        = sum / (short int) 10;
@@ -125,24 +128,24 @@ BigInt BigInt::operator+(const BigInt& num) const {
 		result.value = to_string(carry) + result.value;
 	}
 
-	return (result);
+	return result;
 }
 
 BigInt BigInt::operator*(const BigInt& num) const {
 	if (*this == 0 or num == 0)
-		return (BigInt(0));
+		return BigInt(0);
 	if (*this == 1)
-		return (num);
+		return num;
 	if (num == 1)
-		return (*this);
+		return *this;
 
 	string larger, smaller;
-	tie(larger, smaller) = get_larger_and_smaller(this->value, num.value);
+	tie(larger, smaller) = get_larger_and_smaller(this->get_value(), num.value);
 
 	strip_leading_zeroes(smaller);
 
 	BigInt    result{""}; // the resultant multipication and the value is cleared as the digits will be appended
-	short int carry = 0, mul;
+	short int carry{0};
 
 	for (long i = smaller.size() - 1; i >= 0; i--) { //Warning co stím -> inicializování: Převod z: size_t na: long, může dojít ke ztrátě dat.MSVC(C4267)
 		BigInt temp{""};
@@ -153,6 +156,7 @@ BigInt BigInt::operator*(const BigInt& num) const {
 		}
 
 		for (long ii = larger.size() - 1; ii >= 0; ii--) { //Warning co stím -> inicializování: Převod z: size_t na: long, může dojít ke ztrátě dat.MSVC(C4267)
+			short int mul{0};
 			mul        = (larger[ii] - '0') * (smaller[i] - '0') + carry;
 			temp.value = to_string(mul % 10) + temp.value;
 			carry      = mul / (short int) 10;
@@ -164,7 +168,7 @@ BigInt BigInt::operator*(const BigInt& num) const {
 
 		result = result + temp;
 	}
-	return (result);
+	return result;
 }
 
 BigInt BigInt::operator%(const BigInt& num) const {
@@ -177,49 +181,49 @@ BigInt BigInt::operator%(const BigInt& num) const {
 
 	BigInt remainder{};
 
-	remainder = stoull(this->value) % stoull(num.get_value());
+	remainder = stoull(this->get_value()) % stoull(num.get_value());
 
 	strip_leading_zeroes(remainder.value);
 
-	return (remainder);
+	return remainder;
 }
 
 // 3n + 1 problem
 BigInt BigInt::operator*(const int& num) const {
 	BigInt temp{to_string(num)};
 
-	return (*this * temp);
+	return *this * temp;
 }
 
 BigInt BigInt::operator%(const int& num) const {
 	BigInt temp{to_string(num)};
 
-	return (*this % temp);
+	return *this % temp;
 }
 
 BigInt BigInt::operator+(const int& num) const {
 	BigInt temp{to_string(num)};
 
-	return (*this + temp);
+	return *this + temp;
 }
 /*
 BigInt BigInt::operator-(const int& num) const {
 	BigInt temp{to_string(num)};
 
-	return (*this - temp);
+	return *this - temp;
 }
 */
 BigInt BigInt::operator/(const int& num) const {
 	BigInt result{""};
 
-	size_t size = (this->value.size());
+	size_t size = (this->get_value().size());
 
 	if (size < 2) {
-		result = to_string(stoll(this->value) / 2);
+		result = to_string(stoll(this->get_value()) / 2);
 	}
 
 	for (long i = size - 2; i >= 0; i--) {
-		long long int temp = stoll(this->value.substr(i, 2));
+		long long int temp = stoll(this->get_value().substr(i, 2));
 
 		if (i == 0) {
 			result.value = result.value + reverse_string(to_string(temp / 2));
@@ -228,11 +232,11 @@ BigInt BigInt::operator/(const int& num) const {
 		}
 	}
 
-	return (reverse_string(result.value));
+	return reverse_string(result.value);
 }
 
 // iostream
 ostream& operator<<(std::ostream& os, const BigInt& num) {
 	os << num.get_value();
-	return (os);
+	return os;
 }

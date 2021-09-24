@@ -4,31 +4,29 @@
 
 #	include <iostream>
 
-using namespace std;
-
 class BigInt {
 private:
-	string value{"0"};
+	std::string value{"0"};
 
 public:
 	// Constructors:
-	BigInt() = default;
-	BigInt(const BigInt&);
-	BigInt(const uint64_t&);
-	BigInt(const string&);
+	BigInt()              = default;
+	BigInt(const BigInt&) = default;
+	BigInt(const uint64_t);
+	BigInt(const std::string&);
 
 	// Utility:
-	static bool           is_valid_number(const string&); // Control if input is number
-	void                  add_leading_zeroes(string&, size_t) const;
-	void                  strip_leading_zeroes(string&) const;
-	tuple<string, string> get_larger_and_smaller(const string&, const string&) const;
-	string                reverse_string(const string&) const;
-	string                get_value() const; // Getter
+	static bool                          is_valid_number(const std::string&); // Control if input is number
+	void                                 add_leading_zeroes(std::string&, size_t) const;
+	void                                 strip_leading_zeroes(std::string&) const;
+	std::tuple<std::string, std::string> get_larger_and_smaller(const std::string&, const std::string&) const;
+	std::string                          reverse_string(const std::string&) const;
+	std::string                          get_value() const; // Getter
 
 	// Relational operators:
 	bool operator==(const BigInt&) const;
 	bool operator==(const uint64_t&) const;
-	bool operator==(const string&) const;
+	bool operator==(const std::string&) const;
 
 	// Binary arithmetic operators:
 	BigInt operator+(const BigInt&) const;
@@ -45,6 +43,6 @@ public:
 };
 
 // iostream
-ostream& operator<<(ostream& os, const BigInt& num);
+std::ostream& operator<<(std::ostream& os, const BigInt& num);
 
 #endif
