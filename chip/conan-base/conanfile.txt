@@ -1,13 +1,12 @@
 [requires]
-mosquitto/2.0.11
-yaml-cpp/0.7.0
+paho-mqtt-c/1.3.9
+nlohmann_json/3.10.2
 
 [generators]
 cmake_multi
 
 [options]
-mosquitto:shared=True
-yaml-cpp:shared=True
+
 
 [imports]
 bin, *.dll -> ./out/bin
