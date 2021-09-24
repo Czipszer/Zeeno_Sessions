@@ -6,7 +6,7 @@
 
 class BigInt {
 private:
-	std::string value{"0"};
+	std::string _value{"0"};
 
 public:
 	// Constructors:

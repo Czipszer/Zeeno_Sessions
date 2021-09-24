@@ -66,7 +66,7 @@ string BigInt::reverse_string(const string& reverse) const {
 }
 
 string BigInt::get_value() const {
-	return value;
+	return _value;
 }
 
 // Constructors:
@@ -77,7 +77,7 @@ BigInt::BigInt(const BigInt& num) {
 */
 
 BigInt::BigInt(const uint64_t num) {
-	value = to_string(num);
+	_value = to_string(num);
 }
 
 BigInt::BigInt(const std::string& num) {
@@ -89,7 +89,7 @@ BigInt::BigInt(const std::string& num) {
 	}
 
 	if (is_valid_number(magnitude)) {
-		value = magnitude;
+		_value = magnitude;
 	} else {
 		throw std::invalid_argument("Expected an integer, got \'" + num + "\'");
 	}
@@ -98,7 +98,7 @@ BigInt::BigInt(const std::string& num) {
 // Relational operators:
 bool BigInt::operator==(const BigInt& num) const {
 	bool temp;
-	temp = this->get_value() == num.get_value();
+	temp = _value == num.get_value();
 	return temp;
 }
 
@@ -118,7 +118,7 @@ bool BigInt::operator==(const string& num) const {
 BigInt BigInt::operator+(const BigInt& num) const {
 	// identify the numbers as `larger` and `smaller`
 	string larger, smaller;
-	tie(larger, smaller) = get_larger_and_smaller(this->get_value(), num.get_value());
+	tie(larger, smaller) = get_larger_and_smaller(_value, num.get_value());
 
 	BigInt    result{""}; // the resultant sum and the value is cleared as the digits will be appended
 	short int carry{0};
@@ -126,12 +126,12 @@ BigInt BigInt::operator+(const BigInt& num) const {
 	// add the two values
 	for (long i = larger.size() - 1; i >= 0; i--) { //Warning co stím -> inicializování: Převod z: size_t na: long, může dojít ke ztrátě dat.MSVC(C4267)
 		short int sum{0};
-		sum          = larger[i] - '0' + smaller[i] - '0' + carry;
-		result.value = to_string(sum % 10) + result.value;
-		carry        = sum / (short int) 10;
+		sum           = larger[i] - '0' + smaller[i] - '0' + carry;
+		result._value = to_string(sum % 10) + result._value;
+		carry         = sum / (short int) 10;
 	}
 	if (carry) {
-		result.value = to_string(carry) + result.value;
+		result._value = to_string(carry) + result._value;
 	}
 
 	return result;
@@ -146,7 +146,7 @@ BigInt BigInt::operator*(const BigInt& num) const {
 		return *this;
 
 	string larger, smaller;
-	tie(larger, smaller) = get_larger_and_smaller(this->get_value(), num.value);
+	tie(larger, smaller) = get_larger_and_smaller(_value, num._value);
 
 	strip_leading_zeroes(smaller);
 
@@ -158,18 +158,18 @@ BigInt BigInt::operator*(const BigInt& num) const {
 		size_t step{smaller.size() - 1 - i};
 
 		for (auto k = 0; k < step; k++) {
-			temp.value = to_string(0) + temp.value;
+			temp._value = to_string(0) + temp._value;
 		}
 
 		for (long ii = larger.size() - 1; ii >= 0; ii--) { //Warning co stím -> inicializování: Převod z: size_t na: long, může dojít ke ztrátě dat.MSVC(C4267)
 			short int mul{0};
-			mul        = (larger[ii] - '0') * (smaller[i] - '0') + carry;
-			temp.value = to_string(mul % 10) + temp.value;
-			carry      = mul / (short int) 10;
+			mul         = (larger[ii] - '0') * (smaller[i] - '0') + carry;
+			temp._value = to_string(mul % 10) + temp._value;
+			carry       = mul / (short int) 10;
 		}
 
 		if (carry) {
-			temp.value = to_string(carry) + temp.value;
+			temp._value = to_string(carry) + temp._value;
 		}
 
 		result = result + temp;
@@ -187,9 +187,9 @@ BigInt BigInt::operator%(const BigInt& num) const {
 
 	BigInt remainder{};
 
-	remainder = stoull(this->get_value()) % stoull(num.get_value());
+	remainder = stoull(_value) % stoull(num.get_value());
 
-	strip_leading_zeroes(remainder.value);
+	strip_leading_zeroes(remainder._value);
 
 	return remainder;
 }
@@ -222,23 +222,23 @@ BigInt BigInt::operator-(const int& num) const {
 BigInt BigInt::operator/(const int& num) const {
 	BigInt result{""};
 
-	size_t size = (this->get_value().size());
+	size_t size = (_value.size());
 
 	if (size < 2) {
-		result = to_string(stoll(this->get_value()) / 2);
+		result = to_string(stoll(_value) / 2);
 	}
 
 	for (long i = size - 2; i >= 0; i--) {
-		long long int temp = stoll(this->get_value().substr(i, 2));
+		long long int temp = stoll(_value.substr(i, 2));
 
 		if (i == 0) {
-			result.value = result.value + reverse_string(to_string(temp / 2));
+			result._value = result._value + reverse_string(to_string(temp / 2));
 		} else {
-			result.value.push_back(((temp / 2) % 10) + '0');
+			result._value.push_back(((temp / 2) % 10) + '0');
 		}
 	}
 
-	return reverse_string(result.value);
+	return reverse_string(result._value);
 }
 
 // iostream
