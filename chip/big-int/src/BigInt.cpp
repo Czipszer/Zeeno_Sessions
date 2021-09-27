@@ -10,35 +10,30 @@ using namespace std;
 // Utility:
 bool BigInt::is_valid_number(const string& num) {
 	for (char digit : num) {
-		if (digit < '0' or digit > '9') {
+		//if (digit < '0' or digit > '9') {
+		if (!isdigit(digit)) {
 			return false;
 		}
 	}
 	return true;
 }
 
-void BigInt::add_leading_zeroes(string& num, size_t num_zeroes) const {
+void BigInt::add_leading_zeroes(string& num, size_t num_zeroes) {
 	string temp(num_zeroes, '0');
 	num = temp + num;
 }
 
-void BigInt::strip_leading_zeroes(string& num) const {
-	size_t i{};
+void BigInt::strip_leading_zeroes(string& num) {
+	auto i = num.find_first_not_of('0');
 
-	for (i = 0; i < num.size(); i++) {
-		if (num[i] != '0') {
-			break;
-		}
-	}
-
-	if (i == num.size()) {
-		num = "0";
-	} else {
+	if (i != string::npos) {
 		num = num.substr(i);
+	} else {
+		num = "0";
 	}
 }
 
-tuple<string, string> BigInt::get_larger_and_smaller(const string& num1, const string& num2) const {
+tuple<string, string> BigInt::get_larger_and_smaller(const string& num1, const string& num2) {
 	string larger, smaller;
 
 	if (num1.size() > num2.size() or (num1.size() == num2.size() and num1 > num2)) {
@@ -55,7 +50,23 @@ tuple<string, string> BigInt::get_larger_and_smaller(const string& num1, const s
 	return make_tuple(larger, smaller);
 }
 
-string BigInt::reverse_string(const string& reverse) const {
+tuple<BigInt, BigInt> BigInt::divide(const BigInt& dividend, const BigInt& divisor) {
+	BigInt quotient{1}, remainder, temp{divisor};
+
+	while (temp < dividend) {
+		quotient = quotient + 1;
+		temp     = temp + divisor;
+	}
+
+	if (temp > dividend) {
+		quotient  = quotient - 1;
+		remainder = dividend - (temp - divisor);
+	}
+
+	return make_tuple(quotient, remainder);
+}
+
+string BigInt::reverse_string(const string& reverse) {
 	string reversed;
 
 	for (long i = reverse.size() - 1; i >= 0; i--) {
@@ -96,22 +107,35 @@ BigInt::BigInt(const std::string& num) {
 }
 
 // Relational operators:
+bool BigInt::operator<(const BigInt& num) const {
+	if (_value.length() == num._value.length())
+		return _value < num._value;
+	else
+		return _value.length() < num._value.length();
+}
+
+bool BigInt::operator>(const BigInt& num) const {
+	return !((*this < num) or (*this == num));
+}
+
+bool BigInt::operator<=(const BigInt& num) const {
+	return (*this < num) or (*this == num);
+}
+
+bool BigInt::operator>=(const BigInt& num) const {
+	return !(*this < num);
+}
+
 bool BigInt::operator==(const BigInt& num) const {
-	bool temp;
-	temp = _value == num.get_value();
-	return temp;
+	return _value == num.get_value();
 }
 
 bool BigInt::operator==(const uint64_t num) const {
-	bool temp;
-	temp = *this == BigInt(num);
-	return temp;
+	return *this == BigInt(num);
 }
 
 bool BigInt::operator==(const string& num) const {
-	bool temp;
-	temp = *this == BigInt(num);
-	return temp;
+	return *this == BigInt(num);
 }
 
 // Binary arithmetic operators:
@@ -120,8 +144,8 @@ BigInt BigInt::operator+(const BigInt& num) const {
 	string larger, smaller;
 	tie(larger, smaller) = get_larger_and_smaller(_value, num.get_value());
 
-	BigInt    result{""}; // the resultant sum and the value is cleared as the digits will be appended
-	short int carry{0};
+	BigInt result{""}; // the resultant sum and the value is cleared as the digits will be appended
+	short  carry{0};
 
 	// add the two values
 	for (long i = larger.size() - 1; i >= 0; i--) { //Warning co stím -> inicializování: Převod z: size_t na: long, může dojít ke ztrátě dat.MSVC(C4267)
@@ -133,6 +157,44 @@ BigInt BigInt::operator+(const BigInt& num) const {
 	if (carry) {
 		result._value = to_string(carry) + result._value;
 	}
+
+	return result;
+}
+
+BigInt BigInt::operator-(const BigInt& num) const {
+	// identify the numbers as `larger` and `smaller`
+	string larger, smaller;
+	tie(larger, smaller) = get_larger_and_smaller(_value, num.get_value());
+
+	BigInt result{""};
+
+	add_leading_zeroes(smaller, larger.size() - smaller.size());
+
+	short difference{0};
+	long  i, j;
+
+	// subtract the two values
+	for (i = larger.size() - 1; i >= 0; i--) {
+		difference = larger[i] - smaller[i];
+
+		if (difference < 0) {
+			for (j = i - 1; j >= 0; j--) {
+				if (larger[j] != '0') {
+					larger[j]--; // borrow from the j-th digit
+					break;
+				}
+			}
+			j++;
+
+			while (j != i) {
+				larger[j] = '9'; // add the borrow and take away 1
+				j++;
+			}
+			difference += 10; // add the borrow
+		}
+		result._value = to_string(difference) + result._value;
+	}
+	strip_leading_zeroes(result._value);
 
 	return result;
 }
@@ -177,9 +239,61 @@ BigInt BigInt::operator*(const BigInt& num) const {
 	return result;
 }
 
+BigInt BigInt::operator/(const BigInt& num) const {
+	if (num == 0) {
+		throw logic_error("Attempted division by zero");
+	}
+	if (num == *this) {
+		return BigInt(1);
+	}
+	if (num == 1) {
+		return *this;
+	}
+
+	BigInt quotient{""};
+
+	if (*this <= ULLONG_MAX and num <= ULLONG_MAX) {
+		quotient = stoull(_value) / stoull(num.get_value());
+	} else {
+		BigInt temp, temp_quotient, temp_remainder;
+		size_t temp_index = 0;
+
+		temp_remainder._value = _value.substr(temp_index, num._value.size() - 1);
+		temp_index            = num._value.size() - 1;
+
+		while (temp_index < _value.size()) {
+			temp._value = temp_remainder._value.append(1, _value[temp_index]);
+			temp_index++;
+
+			while (temp < num) {
+				quotient._value = quotient._value + "0";
+
+				if (temp_index < _value.size()) {
+					temp._value.append(1, _value[temp_index]);
+					temp_index++;
+				} else {
+					break;
+				}
+			}
+
+			if (temp == num) {
+				quotient._value = quotient._value + "1";
+				temp_remainder  = 0;
+			} else if (temp > num) {
+				strip_leading_zeroes(temp._value);
+				tie(temp_quotient, temp_remainder) = divide(temp, num);
+				quotient._value += temp_quotient._value;
+			}
+		}
+	}
+	strip_leading_zeroes(quotient._value);
+
+	return quotient;
+}
+
 BigInt BigInt::operator%(const BigInt& num) const {
 	if (num == 0) {
-		throw std::logic_error("Attempted division by zero");
+		throw logic_error("Attempted division by zero");
 	}
 	if (num == 1 or num == *this) {
 		return BigInt{0};
@@ -187,7 +301,12 @@ BigInt BigInt::operator%(const BigInt& num) const {
 
 	BigInt remainder{};
 
-	remainder = stoull(_value) % stoull(num.get_value());
+	if (*this <= ULLONG_MAX and num <= ULLONG_MAX) {
+		remainder = stoull(_value) % stoull(num.get_value());
+	} else {
+		BigInt quotient = *this / num;
+		remainder       = *this - quotient * num;
+	}
 
 	strip_leading_zeroes(remainder._value);
 
@@ -212,13 +331,13 @@ BigInt BigInt::operator+(const int& num) const {
 
 	return *this + temp;
 }
-/*
+
 BigInt BigInt::operator-(const int& num) const {
 	BigInt temp{to_string(num)};
 
 	return *this - temp;
 }
-*/
+
 BigInt BigInt::operator/(const int& num) const {
 	BigInt result{""};
 

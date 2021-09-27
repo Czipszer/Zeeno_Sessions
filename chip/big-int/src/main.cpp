@@ -67,5 +67,4 @@ int main(int, char**) {
 	std::cout << "0x1}" << std::endl;
 
 	return EXIT_SUCCESS;
-	;
 }
