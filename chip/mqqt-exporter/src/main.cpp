@@ -1,19 +1,27 @@
-#include <cstdlib>
-#include <iostream>
-#include <memory>
 #include <string>
-#include <vector>
 
 #include "MQTTAsync.h"
+#include "configReader.hpp"
+#include "counter.hpp"
 #include "main.hpp"
 
-using namespace std;
+using namespace nlohmann;
 
 int main() {
 	try {
+		json                    file = loadJson("config.json");
+		mqttServerConfiguration data = fromJson(file);
+		std::cout << data << std::endl;
+
+		std::unordered_multimap<std::string, std::string> labels = {{"ahoj", "vole"}, {"jako", "prak"}};
+		Counter                                           cntr("Counter", labels, 854);
+		std::cout << cntr.getInfo() << std::endl;
+		cntr.incValue();
+		std::cout << cntr.getInfo() << std::endl;
+
 		return EXIT_SUCCESS;
-	} catch (const exception& e) {
-		cerr << e.what();
+	} catch (const std::exception& e) {
+		std::cerr << e.what();
 		return EXIT_FAILURE;
 	}
 }

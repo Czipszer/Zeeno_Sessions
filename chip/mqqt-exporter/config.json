@@ -1,0 +1,7 @@
+{
+    "name": "server",
+    "ipAdress": "192.168.1.10",
+    "port": 80,
+    "user": "admin",
+    "password": "admin1234"
+}
