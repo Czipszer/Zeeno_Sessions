@@ -12,8 +12,8 @@ private:
 
 public:
 	Counter(std::string);
-	Counter(std::string, std::unordered_multimap<std::string, std::string>);
-	Counter(std::string, std::unordered_multimap<std::string, std::string>, int);
+	Counter(std::string, std::unordered_map<std::string, std::string>);
+	Counter(std::string, std::unordered_map<std::string, std::string>, int);
 
 	void resetValue();
 	void setValue(int);

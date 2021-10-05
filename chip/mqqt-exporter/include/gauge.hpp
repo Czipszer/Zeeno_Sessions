@@ -12,8 +12,8 @@ private:
 
 public:
 	Gauge(std::string);
-	Gauge(std::string, std::unordered_multimap<std::string, std::string>);
-	Gauge(std::string, std::unordered_multimap<std::string, std::string>, int);
+	Gauge(std::string, std::unordered_map<std::string, std::string>);
+	Gauge(std::string, std::unordered_map<std::string, std::string>, int);
 
 	void resetValue();
 	void setValue(int);

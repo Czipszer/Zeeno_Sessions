@@ -6,8 +6,8 @@
 using namespace std;
 
 Counter::Counter(string newName) : Metric(newName){};
-Counter::Counter(string newName, unordered_multimap<string, string> newLabels) : Metric(newName, newLabels){};
-Counter::Counter(string newName, unordered_multimap<string, string> newLabels, int newValue) : Metric(newName, newLabels) {
+Counter::Counter(string newName, unordered_map<string, string> newLabels) : Metric(newName, newLabels){};
+Counter::Counter(string newName, unordered_map<string, string> newLabels, int newValue) : Metric(newName, newLabels) {
 	_value = newValue;
 };
 

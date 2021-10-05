@@ -13,7 +13,7 @@ Metric::Metric(string newName) {
 	_timestamp = (chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count());
 }
 
-Metric::Metric(string newName, std::unordered_multimap<std::string, std::string> newLabels) {
+Metric::Metric(string newName, std::unordered_map<std::string, std::string> newLabels) {
 	//name
 	_name = newName;
 
@@ -28,7 +28,7 @@ string Metric::getName() const {
 	return _name;
 }
 
-unordered_multimap<string, string> Metric::getLabels() const {
+unordered_map<string, string> Metric::getLabels() const {
 	return _labels;
 }
 

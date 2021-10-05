@@ -6,8 +6,8 @@
 using namespace std;
 
 Gauge::Gauge(string newName) : Metric(newName){};
-Gauge::Gauge(string newName, unordered_multimap<string, string> newLabels) : Metric(newName, newLabels){};
-Gauge::Gauge(string newName, unordered_multimap<string, string> newLabels, int newValue) : Metric(newName, newLabels) {
+Gauge::Gauge(string newName, unordered_map<string, string> newLabels) : Metric(newName, newLabels){};
+Gauge::Gauge(string newName, unordered_map<string, string> newLabels, int newValue) : Metric(newName, newLabels) {
 	_value = newValue;
 };
 

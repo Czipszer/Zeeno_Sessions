@@ -8,22 +8,22 @@
 
 class Metric {
 protected:
-	std::string                                       _name;
-	std::unordered_multimap<std::string, std::string> _labels;
-	int64_t                                           _timestamp{};
+	std::string                                  _name;
+	std::unordered_map<std::string, std::string> _labels;
+	int64_t                                      _timestamp{};
 
 public:
-	explicit Metric() = default;
-	explicit Metric(std::string);
-	explicit Metric(std::string, std::unordered_multimap<std::string, std::string>);
+	Metric() = default;
+	Metric(std::string);
+	Metric(std::string, std::unordered_map<std::string, std::string>);
 
 	virtual ~Metric() = default;
 
 	virtual std::string getInfo() const = 0;
 
-	std::string                                       getName() const;
-	std::unordered_multimap<std::string, std::string> getLabels() const;
-	int64_t                                           getTimestamp() const;
+	std::string                                  getName() const;
+	std::unordered_map<std::string, std::string> getLabels() const;
+	int64_t                                      getTimestamp() const;
 };
 
 #endif

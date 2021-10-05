@@ -13,8 +13,8 @@ int main() {
 		mqttServerConfiguration data = fromJson(file);
 		std::cout << data << std::endl;
 
-		std::unordered_multimap<std::string, std::string> labels = {{"ahoj", "vole"}, {"jako", "prak"}};
-		Counter                                           cntr("Counter", labels, 854);
+		std::unordered_map<std::string, std::string> labels = {{"ahoj", "vole"}, {"jako", "prak"}};
+		Counter                                      cntr("Counter", labels, 854);
 		std::cout << cntr.getInfo() << std::endl;
 		cntr.incValue();
 		std::cout << cntr.getInfo() << std::endl;
