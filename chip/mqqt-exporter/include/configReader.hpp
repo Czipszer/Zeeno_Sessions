@@ -7,7 +7,7 @@
 
 #	include "nlohmann/json.hpp" //https://github.com/nlohmann/json
 
-struct mqttServerConfiguration {
+struct MqttServerConfiguration {
 	std::string name;
 	std::string ipAdress;
 	uint16_t    port{80};
@@ -15,10 +15,10 @@ struct mqttServerConfiguration {
 	std::string password;
 };
 
-mqttServerConfiguration fromJson(const nlohmann::json&);
+MqttServerConfiguration fromJson(const nlohmann::json&);
 
 nlohmann::json loadJson(const std::string&);
 
-std::ostream& operator<<(std::ostream&, const mqttServerConfiguration&);
+std::ostream& operator<<(std::ostream&, const MqttServerConfiguration&);
 
 #endif

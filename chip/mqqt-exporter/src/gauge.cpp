@@ -52,8 +52,9 @@ string Gauge::getInfo() const {
 
 	info = info + " " + to_string(_value);
 
-	if (_timestamp != 0) {
-		info = info + " " + to_string(_timestamp);
+	auto epoch = chrono::time_point_cast<chrono::milliseconds>(_timestamp).time_since_epoch().count();
+	if (epoch > 0) {
+		info = info + " " + to_string(epoch);
 	}
 
 	return info;
@@ -65,7 +66,7 @@ Gauge& Gauge::operator++() {
 }
 
 Gauge& Gauge::operator--() {
-	_value++;
+	_value--;
 	return *this;
 }
 

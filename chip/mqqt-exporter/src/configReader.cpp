@@ -5,8 +5,8 @@
 
 using namespace nlohmann;
 
-mqttServerConfiguration fromJson(const json& jsonFile) {
-	mqttServerConfiguration data;
+MqttServerConfiguration fromJson(const json& jsonFile) {
+	MqttServerConfiguration data;
 
 	jsonFile.at("name").get_to(data.name);
 	jsonFile.at("ipAdress").get_to(data.ipAdress);
@@ -31,7 +31,7 @@ json loadJson(const std::string& pathToFile) {
 	return myJson;
 };
 
-std::ostream& operator<<(std::ostream& os, const mqttServerConfiguration& data) {
+std::ostream& operator<<(std::ostream& os, const MqttServerConfiguration& data) {
 	return os << "Mqtt server:" << std::endl
 	          << "\tname: \t\t" << data.name << std::endl
 	          << "\ttarget: \t" << data.ipAdress << ":" << data.port << std::endl

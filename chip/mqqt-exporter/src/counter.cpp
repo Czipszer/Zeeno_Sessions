@@ -35,8 +35,8 @@ string Counter::getInfo() const {
 		string tempInfo = "{";
 		size_t i{0};
 
-		for (auto x : _labels) {
-			tempInfo = tempInfo + x.first + "=\"" + x.second + "\"";
+		for (auto [key, value] : _labels) {
+			tempInfo = tempInfo + key + "=\"" + value + "\"";
 			i++;
 
 			if (sizeLabels != 1 && i != sizeLabels) {
@@ -48,8 +48,9 @@ string Counter::getInfo() const {
 
 	info = info + " " + to_string(_value);
 
-	if (_timestamp != 0) {
-		info = info + " " + to_string(_timestamp);
+	auto epoch = chrono::time_point_cast<chrono::milliseconds>(_timestamp).time_since_epoch().count();
+	if (epoch > 0) {
+		info = info + " " + to_string(epoch);
 	}
 
 	return info;

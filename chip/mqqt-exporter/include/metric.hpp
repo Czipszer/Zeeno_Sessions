@@ -10,7 +10,7 @@ class Metric {
 protected:
 	std::string                                  _name;
 	std::unordered_map<std::string, std::string> _labels;
-	int64_t                                      _timestamp{};
+	std::chrono::system_clock::time_point        _timestamp{};
 
 public:
 	Metric() = default;
@@ -23,7 +23,7 @@ public:
 
 	std::string                                  getName() const;
 	std::unordered_map<std::string, std::string> getLabels() const;
-	int64_t                                      getTimestamp() const;
+	std::chrono::system_clock::time_point        getTimestamp() const;
 };
 
 #endif

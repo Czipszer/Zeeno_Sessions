@@ -10,7 +10,7 @@ using namespace nlohmann;
 int main() {
 	try {
 		json                    file = loadJson("config.json");
-		mqttServerConfiguration data = fromJson(file);
+		MqttServerConfiguration data = fromJson(file);
 		std::cout << data << std::endl;
 
 		std::unordered_map<std::string, std::string> labels = {{"ahoj", "vole"}, {"jako", "prak"}};
