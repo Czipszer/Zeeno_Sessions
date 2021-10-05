@@ -69,7 +69,7 @@ tuple<BigInt, BigInt> BigInt::divide(const BigInt& dividend, const BigInt& divis
 string BigInt::reverse_string(const string& reverse) {
 	string reversed;
 
-	for (long i = reverse.size() - 1; i >= 0; i--) {
+	for (long i = static_cast<long>(reverse.size() - 1); i >= 0; i--) {
 		reversed.push_back(reverse[i]);
 	}
 
@@ -144,15 +144,15 @@ BigInt BigInt::operator+(const BigInt& num) const {
 	string larger, smaller;
 	tie(larger, smaller) = get_larger_and_smaller(_value, num.get_value());
 
-	BigInt result{""}; // the resultant sum and the value is cleared as the digits will be appended
+	BigInt result{""};
 	short  carry{0};
 
 	// add the two values
-	for (long i = larger.size() - 1; i >= 0; i--) { //Warning co stím -> inicializování: Převod z: size_t na: long, může dojít ke ztrátě dat.MSVC(C4267)
+	for (long i = static_cast<long>(larger.size() - 1); i >= 0; i--) {
 		short int sum{0};
 		sum           = larger[i] - '0' + smaller[i] - '0' + carry;
 		result._value = to_string(sum % 10) + result._value;
-		carry         = sum / (short int) 10;
+		carry         = sum / static_cast<short int>(10);
 	}
 	if (carry) {
 		result._value = to_string(carry) + result._value;
@@ -174,7 +174,7 @@ BigInt BigInt::operator-(const BigInt& num) const {
 	long  i, j;
 
 	// subtract the two values
-	for (i = larger.size() - 1; i >= 0; i--) {
+	for (i = static_cast<long>(larger.size() - 1); i >= 0; i--) {
 		difference = larger[i] - smaller[i];
 
 		if (difference < 0) {
@@ -215,7 +215,7 @@ BigInt BigInt::operator*(const BigInt& num) const {
 	BigInt    result{""}; // the resultant multipication and the value is cleared as the digits will be appended
 	short int carry{0};
 
-	for (long i = smaller.size() - 1; i >= 0; i--) { //Warning co stím -> inicializování: Převod z: size_t na: long, může dojít ke ztrátě dat.MSVC(C4267)
+	for (long i = static_cast<long>(smaller.size() - 1); i >= 0; i--) {
 		BigInt temp{""};
 		size_t step{smaller.size() - 1 - i};
 
@@ -223,11 +223,11 @@ BigInt BigInt::operator*(const BigInt& num) const {
 			temp._value = to_string(0) + temp._value;
 		}
 
-		for (long ii = larger.size() - 1; ii >= 0; ii--) { //Warning co stím -> inicializování: Převod z: size_t na: long, může dojít ke ztrátě dat.MSVC(C4267)
+		for (long ii = static_cast<long>(larger.size() - 1); ii >= 0; ii--) {
 			short int mul{0};
 			mul         = (larger[ii] - '0') * (smaller[i] - '0') + carry;
 			temp._value = to_string(mul % 10) + temp._value;
-			carry       = mul / (short int) 10;
+			carry       = mul / static_cast<short int>(10);
 		}
 
 		if (carry) {
@@ -347,7 +347,7 @@ BigInt BigInt::operator/(const int& num) const {
 		result = to_string(stoll(_value) / 2);
 	}
 
-	for (long i = size - 2; i >= 0; i--) {
+	for (long i = static_cast<long>(size - 2); i >= 0; i--) {
 		long long int temp = stoll(_value.substr(i, 2));
 
 		if (i == 0) {
