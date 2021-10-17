@@ -1,0 +1,95 @@
+#include <algorithm>
+#include <fstream>
+#include <ranges>
+#include <sstream>
+#include <string>
+
+#include "counter.hpp"
+#include "metric.hpp"
+#include "summary.hpp"
+
+using namespace std;
+using namespace std::chrono_literals;
+
+Summary::Summary(string newName) : Metric(newName){};
+Summary::Summary(string newName, unordered_map<string, string> newLabels) : Metric(newName, newLabels){};
+Summary::Summary(string newName, unordered_map<string, string> newLabels, vector<double> newQuantiles, chrono::minutes newWindowPeriod)
+    : Metric(newName, newLabels) {
+	for (auto quantilesLenght : newQuantiles) {
+		auto         quantilesLabels{newLabels};
+		stringstream roundedNum;
+		roundedNum << setprecision(4) << quantilesLenght;
+		quantilesLabels["quantile"] = roundedNum.str();
+
+		Gauge quantile(newName, quantilesLabels);
+
+		_quantiles.push_back(make_pair(quantilesLenght, quantile));
+	}
+
+	Gauge sum(newName + "_sum", newLabels);
+	_sum = sum;
+
+	Counter count(newName + "_count", newLabels);
+	_count = count;
+
+	_windowPeriod = newWindowPeriod;
+};
+
+void Summary::resetValue() {
+	for (auto& [quantile, gauge] : _quantiles) {
+		gauge.resetValue();
+	}
+
+	_count.resetValue();
+	_sum.resetValue();
+}
+
+void Summary::addSample(double sampleQuantile) {
+	_queue.push_back(make_pair(sampleQuantile, chrono::system_clock::now()));
+
+	while ((_queue.front().second) < (chrono::system_clock::now() - _windowPeriod)) {
+		_queue.pop_front();
+	}
+}
+
+string Summary::getInfo() const {
+	string info;
+
+	auto view = _queue | views::filter([this](std::pair<double, Clock::time_point> p) { return p.second >= (chrono::system_clock::now() - _windowPeriod); })
+	            | views::keys;
+	vector<double> values{view.begin(), view.end()};
+	ranges::sort(values);
+
+	auto quantiles = _quantiles;
+	for (auto& [quantile, gauge] : quantiles) {
+		double temp{};
+		int    roundedTemp{};
+		temp        = floor(values.size() * quantile);
+		roundedTemp = static_cast<int>(temp);
+		if (values.size() == 0) {
+			info += gauge.getInfo() + "\n";
+		} else {
+			gauge.setValue(values[roundedTemp]);
+			info += gauge.getInfo() + "\n";
+		}
+	}
+
+	double sumSummary{0};
+	auto   sum   = _sum;
+	auto   count = _count;
+	for (auto value : values) {
+		count.incValue();
+		sumSummary += value;
+	}
+	info += count.getInfo() + "\n";
+
+	sum.setValue(sumSummary);
+	info += sum.getInfo() + "\n";
+
+	auto epoch = chrono::time_point_cast<chrono::milliseconds>(_timestamp).time_since_epoch().count();
+	if (epoch > 0) {
+		info += _name + "_created " + to_string(epoch) + "\n";
+	}
+
+	return info;
+}

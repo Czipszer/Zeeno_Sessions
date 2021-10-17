@@ -10,9 +10,9 @@
 
 class Histogram : public Metric {
 private:
-	std::vector<Counter> _bucket;
-	Counter              _sum;
-	Counter              _count;
+	std::vector<std::pair<double, Counter>> _bucket;
+	Counter                                 _sum;
+	Counter                                 _count;
 
 public:
 	Histogram(std::string);
@@ -20,6 +20,7 @@ public:
 	Histogram(std::string, std::unordered_map<std::string, std::string>, std::vector<double>);
 
 	void resetValue();
+	void addSample(double);
 
 	std::string getInfo() const override;
 };

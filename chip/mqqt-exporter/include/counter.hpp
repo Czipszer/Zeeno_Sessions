@@ -7,7 +7,7 @@
 #	include "metric.hpp"
 
 class Counter : public Metric {
-private:
+protected:
 	int _value{0};
 
 public:
@@ -18,7 +18,7 @@ public:
 
 	void resetValue();
 	void setValue(int);
-	int  getValue();
+	int  getValue() const;
 	int  incValue();
 
 	std::string getInfo() const override;

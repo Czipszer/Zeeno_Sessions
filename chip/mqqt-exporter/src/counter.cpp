@@ -19,13 +19,13 @@ void Counter::setValue(int newValue) {
 	_value = newValue;
 }
 
-int Counter::getValue() {
+int Counter::getValue() const {
 	return _value;
 }
 
 int Counter::incValue() {
 	return _value++;
-};
+}
 
 string Counter::getInfo() const {
 	string info{_name};
