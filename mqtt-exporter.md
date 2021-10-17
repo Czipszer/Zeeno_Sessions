@@ -24,10 +24,10 @@ Configuration technologies (choose one)
   - https://prometheus.io/docs/instrumenting/exposition_formats/
   - https://github.com/OpenObservability/OpenMetrics/blob/main/specification/OpenMetrics.md
 1. Implement an output module that is able to manage many Prometheus types and output them into a file (path is configurable). Implement the rest of Prometheus types. (2021-10-3)
-1. Make output period of the file configurable. (2021-10-10)
-1. Learn about your MQTT client implementation and connect to the server. Subscribe and publish values. (2021-10-17)
-1. Read from configuration file a list of topics to subscribe to. Parse the message and topic by a regex and print it on the screen. (2021-10-24)
-1. Finish the project (2021-11-01)
+1. Make output period of the file configurable. (2021-10-17)
+1. Learn about your MQTT client implementation and connect to the server. Subscribe and publish values. (2021-10-24)
+1. Read from configuration file a list of topics to subscribe to. Parse the message and topic by a regex and print it on the screen. (2021-11-01)
+1. Finish the project (2021-11-08)
 
 ## Requirements
 - Configurable MQTT server
