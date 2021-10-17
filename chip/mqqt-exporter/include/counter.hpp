@@ -8,9 +8,10 @@
 
 class Counter : public Metric {
 private:
-	int _value;
+	int _value{0};
 
 public:
+	Counter() = default;
 	Counter(std::string);
 	Counter(std::string, std::unordered_map<std::string, std::string>);
 	Counter(std::string, std::unordered_map<std::string, std::string>, int);

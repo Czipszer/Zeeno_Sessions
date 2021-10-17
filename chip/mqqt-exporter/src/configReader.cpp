@@ -5,7 +5,7 @@
 
 using namespace nlohmann;
 
-MqttServerConfiguration fromJson(const json& jsonFile) {
+MqttServerConfiguration MqttServerConfiguration::fromJson(const json& jsonFile) {
 	MqttServerConfiguration data;
 
 	jsonFile.at("name").get_to(data.name);

@@ -4,28 +4,21 @@
 
 #	include <string>
 
-#	include "metric.hpp"
+#	include "counter.hpp"
 
-class Gauge : public Metric {
+class Gauge : public Counter {
 private:
-	int _value;
+	int _value{0};
 
 public:
+	Gauge() = default;
 	Gauge(std::string);
 	Gauge(std::string, std::unordered_map<std::string, std::string>);
 	Gauge(std::string, std::unordered_map<std::string, std::string>, int);
 
-	void resetValue();
-	void setValue(int);
-	int  getValue();
-	int  incValue();
-	int  decValue();
+	int decValue();
 
-	std::string getInfo() const override;
-
-	Gauge& operator++();
 	Gauge& operator--();
-	Gauge& operator=(int);
 };
 
 #endif

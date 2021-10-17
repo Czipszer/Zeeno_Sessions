@@ -13,9 +13,9 @@ struct MqttServerConfiguration {
 	uint16_t    port{80};
 	std::string user;
 	std::string password;
-};
 
-MqttServerConfiguration fromJson(const nlohmann::json&);
+	static MqttServerConfiguration fromJson(const nlohmann::json&);
+};
 
 nlohmann::json loadJson(const std::string&);
 
