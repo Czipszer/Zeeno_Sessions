@@ -8,6 +8,7 @@ class metricWriter {
 public:
 private:
 	std::fstream file;
+	//pokus
 };
 
 #endif
