@@ -1,15 +1,12 @@
-#include <fstream>
 #include <sstream>
 #include <string>
-
 
 #include "gauge.hpp"
 
 using namespace std;
 
-Gauge::Gauge(string newName) : Metric(newName){};
-Gauge::Gauge(string newName, unordered_map<string, string> newLabels) : Metric(newName, newLabels){};
 Gauge::Gauge(string newName, unordered_map<string, string> newLabels, double newValue) : Metric(newName, newLabels) {
+	_type  = "gauge";
 	_value = newValue;
 };
 
@@ -26,15 +23,15 @@ double Gauge::getValue() const {
 }
 
 double Gauge::incValue() {
-	return _value++;
+	return ++_value;
 }
 
 double Gauge::decValue() {
-	return _value--;
+	return --_value;
 }
 
 string Gauge::getInfo() const {
-	string info{_name};
+	string info{getFullName()};
 
 	size_t sizeLabels{_labels.size()};
 	if (sizeLabels != 0) {
@@ -62,6 +59,10 @@ string Gauge::getInfo() const {
 	}
 
 	return info;
+}
+
+string Gauge::getType() const {
+	return _type;
 }
 
 Gauge& Gauge::operator++() {

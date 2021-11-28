@@ -7,14 +7,9 @@
 #	include "metric.hpp"
 
 class Counter : public Metric {
-protected:
-	int _value{0};
-
 public:
 	Counter() = default;
-	Counter(std::string);
-	Counter(std::string, std::unordered_map<std::string, std::string>);
-	Counter(std::string, std::unordered_map<std::string, std::string>, int);
+	Counter(std::string name, std::unordered_map<std::string, std::string> labels = {}, int value = 0);
 
 	void resetValue();
 	void setValue(int);
@@ -23,8 +18,13 @@ public:
 
 	std::string getInfo() const override;
 
+	std::string getType() const override;
+
 	Counter& operator++();
 	Counter& operator=(int);
+
+protected:
+	int _value{0};
 };
 
 #endif

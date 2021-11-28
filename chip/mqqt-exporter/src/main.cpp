@@ -1,12 +1,11 @@
+#include <MQTTAsync.h>
 #include <string>
-
-#include "MQTTAsync.h"
 
 #include "configReader.hpp"
 #include "counter.hpp"
 #include "gauge.hpp"
 #include "histogram.hpp"
-#include "main.hpp"
+#include "myEXception.hpp"
 #include "summary.hpp"
 
 using namespace nlohmann;
@@ -42,8 +41,8 @@ int main() {
 		std::cout << sumbob.getInfo() << std::endl;
 
 		return EXIT_SUCCESS;
-	} catch (const std::exception& e) {
-		std::cerr << e.what();
+	} catch (const FileExcept& e) {
+		std::cerr << "Error number: " << e.getErrorNumber() << std::endl << e.what() << std::endl;
 		return EXIT_FAILURE;
 	}
 }

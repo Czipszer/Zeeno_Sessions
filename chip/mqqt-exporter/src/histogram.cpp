@@ -1,5 +1,5 @@
-#include <fstream>
 #include <limits>
+#include <ranges>
 #include <sstream>
 #include <string>
 
@@ -9,9 +9,9 @@
 
 using namespace std;
 
-Histogram::Histogram(string newName) : Metric(newName){};
-Histogram::Histogram(string newName, unordered_map<string, string> newLabels) : Metric(newName, newLabels){};
 Histogram::Histogram(string newName, unordered_map<string, string> newLabels, vector<double> newBucket) : Metric(newName, newLabels) {
+	_type = "historgram";
+
 	for (auto bucketLenght : newBucket) {
 		auto         bucketLabels{newLabels};
 		stringstream roundedNum;
@@ -36,7 +36,7 @@ Histogram::Histogram(string newName, unordered_map<string, string> newLabels, ve
 };
 
 void Histogram::resetValue() {
-	for (auto& [le, counter] : _bucket) {
+	for (auto& counter : _bucket | views::values) {
 		counter.resetValue();
 	}
 
@@ -62,7 +62,7 @@ void Histogram::addSample(double typeBucket) {
 
 string Histogram::getInfo() const {
 	string info;
-	for (auto& [le, counter] : _bucket) {
+	for (auto& counter : _bucket | views::values) {
 		info += counter.getInfo() + "\n";
 	}
 
@@ -75,4 +75,8 @@ string Histogram::getInfo() const {
 	}
 
 	return info;
+}
+
+string Histogram::getType() const {
+	return _type;
 }

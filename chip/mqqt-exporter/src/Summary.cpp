@@ -11,10 +11,10 @@
 using namespace std;
 using namespace std::chrono_literals;
 
-Summary::Summary(string newName) : Metric(newName){};
-Summary::Summary(string newName, unordered_map<string, string> newLabels) : Metric(newName, newLabels){};
 Summary::Summary(string newName, unordered_map<string, string> newLabels, vector<double> newQuantiles, chrono::minutes newWindowPeriod)
     : Metric(newName, newLabels) {
+	_type = "summary";
+
 	for (auto quantilesLenght : newQuantiles) {
 		auto         quantilesLabels{newLabels};
 		stringstream roundedNum;
@@ -45,9 +45,9 @@ void Summary::resetValue() {
 }
 
 void Summary::addSample(double sampleQuantile) {
-	_queue.push_back(make_pair(sampleQuantile, chrono::system_clock::now()));
+	_queue.push_back(make_pair(sampleQuantile, Clock::now()));
 
-	while ((_queue.front().second) < (chrono::system_clock::now() - _windowPeriod)) {
+	while ((_queue.front().second) < (Clock::now() - _windowPeriod)) {
 		_queue.pop_front();
 	}
 }
@@ -55,8 +55,7 @@ void Summary::addSample(double sampleQuantile) {
 string Summary::getInfo() const {
 	string info;
 
-	auto view = _queue | views::filter([this](std::pair<double, Clock::time_point> p) { return p.second >= (chrono::system_clock::now() - _windowPeriod); })
-	            | views::keys;
+	auto view = _queue | views::filter([this](std::pair<double, Clock::time_point> p) { return p.second >= (Clock::now() - _windowPeriod); }) | views::keys;
 	vector<double> values{view.begin(), view.end()};
 	ranges::sort(values);
 
@@ -66,12 +65,11 @@ string Summary::getInfo() const {
 		int    roundedTemp{};
 		temp        = floor(values.size() * quantile);
 		roundedTemp = static_cast<int>(temp);
-		if (values.size() == 0) {
-			info += gauge.getInfo() + "\n";
-		} else {
+
+		if (!values.empty()) {
 			gauge.setValue(values[roundedTemp]);
-			info += gauge.getInfo() + "\n";
 		}
+		info += gauge.getInfo() + "\n";
 	}
 
 	double sumSummary{0};
@@ -92,4 +90,8 @@ string Summary::getInfo() const {
 	}
 
 	return info;
+}
+
+string Summary::getType() const {
+	return _type;
 }

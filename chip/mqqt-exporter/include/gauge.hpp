@@ -7,14 +7,9 @@
 #	include "metric.hpp"
 
 class Gauge : public Metric {
-protected:
-	double _value{0};
-
 public:
 	Gauge() = default;
-	Gauge(std::string);
-	Gauge(std::string, std::unordered_map<std::string, std::string>);
-	Gauge(std::string, std::unordered_map<std::string, std::string>, double);
+	Gauge(std::string name, std::unordered_map<std::string, std::string> labels = {}, double value = 0);
 
 	void   resetValue();
 	void   setValue(double);
@@ -24,9 +19,14 @@ public:
 
 	std::string getInfo() const override;
 
+	std::string getType() const override;
+
 	Gauge& operator++();
 	Gauge& operator--();
 	Gauge& operator=(double);
+
+protected:
+	double _value{0};
 };
 
 #endif

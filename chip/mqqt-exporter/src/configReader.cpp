@@ -2,6 +2,7 @@
 #include <string>
 
 #include "configReader.hpp"
+#include "myEXception.hpp"
 
 using namespace nlohmann;
 
@@ -25,7 +26,7 @@ json loadJson(const std::string& pathToFile) {
 		myJson = json::parse(myJsonFile);
 		myJsonFile.close();
 	} else {
-		throw std::runtime_error("Unable to open file");
+		throw FileExcept("Unable to open file", -10);
 	}
 
 	return myJson;

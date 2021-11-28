@@ -1,13 +1,11 @@
-#include <fstream>
 #include <string>
 
 #include "counter.hpp"
 
 using namespace std;
 
-Counter::Counter(string newName) : Metric(newName){};
-Counter::Counter(string newName, unordered_map<string, string> newLabels) : Metric(newName, newLabels){};
 Counter::Counter(string newName, unordered_map<string, string> newLabels, int newValue) : Metric(newName, newLabels) {
+	_type  = "counter";
 	_value = newValue;
 };
 
@@ -24,11 +22,11 @@ int Counter::getValue() const {
 }
 
 int Counter::incValue() {
-	return _value++;
+	return ++_value;
 }
 
 string Counter::getInfo() const {
-	string info{_name};
+	string info{getFullName()};
 
 	size_t sizeLabels{_labels.size()};
 	if (sizeLabels != 0) {
@@ -54,6 +52,10 @@ string Counter::getInfo() const {
 	}
 
 	return info;
+}
+
+string Counter::getType() const {
+	return _type;
 }
 
 Counter& Counter::operator++() {

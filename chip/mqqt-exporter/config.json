@@ -1,7 +1,7 @@
 {
-    "name": "server",
-    "ipAdress": "192.168.1.10",
-    "port": 80,
+    "name": "MQTT Broker",
+    "ipAdress": "eu1.broker.rechip.eu",
+    "port": 11009,
     "user": "admin",
     "password": "admin1234"
 }

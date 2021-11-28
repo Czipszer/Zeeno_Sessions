@@ -9,20 +9,21 @@
 #	include "counter.hpp"
 
 class Histogram : public Metric {
-private:
-	std::vector<std::pair<double, Counter>> _bucket;
-	Counter                                 _sum;
-	Counter                                 _count;
-
 public:
-	Histogram(std::string);
-	Histogram(std::string, std::unordered_map<std::string, std::string>);
-	Histogram(std::string, std::unordered_map<std::string, std::string>, std::vector<double>);
+	Histogram() = default;
+	Histogram(std::string name, std::unordered_map<std::string, std::string> labels = {}, std::vector<double> bucket = {});
 
 	void resetValue();
 	void addSample(double);
 
 	std::string getInfo() const override;
+
+	std::string getType() const override;
+
+private:
+	std::vector<std::pair<double, Counter>> _bucket;
+	Counter                                 _sum;
+	Counter                                 _count;
 };
 
 #endif
