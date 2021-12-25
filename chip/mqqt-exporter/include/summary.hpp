@@ -18,6 +18,8 @@ public:
 	    std::vector<double>                          quantiles    = {},
 	    std::chrono::minutes                         windowPeriod = std::chrono::minutes(5));
 
+	void setUnit(std::string unit) override;
+
 	void resetValue();
 	void addSample(double);
 

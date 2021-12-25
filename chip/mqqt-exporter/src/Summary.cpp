@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <fstream>
+#include <iomanip>
 #include <ranges>
 #include <sstream>
 #include <string>
@@ -26,14 +27,27 @@ Summary::Summary(string newName, unordered_map<string, string> newLabels, vector
 		_quantiles.push_back(make_pair(quantilesLenght, quantile));
 	}
 
-	Gauge sum(newName + "_sum", newLabels);
+	Gauge sum(newName, newLabels);
 	_sum = sum;
+	_sum.setPrefix("sum");
 
-	Counter count(newName + "_count", newLabels);
+	Counter count(newName, newLabels);
 	_count = count;
+	_count.setPrefix("count");
 
 	_windowPeriod = newWindowPeriod;
-};
+}
+
+void Summary::setUnit(string newUnit) {
+	Metric::setUnit(newUnit);
+
+	_count.setUnit(newUnit);
+	_sum.setUnit(newUnit);
+
+	for (auto& gauge : _quantiles | views::values) {
+		gauge.setUnit(newUnit);
+	}
+}
 
 void Summary::resetValue() {
 	for (auto& [quantile, gauge] : _quantiles) {
@@ -86,7 +100,7 @@ string Summary::getInfo() const {
 
 	auto epoch = chrono::time_point_cast<chrono::milliseconds>(_timestamp).time_since_epoch().count();
 	if (epoch > 0) {
-		info += _name + "_created " + to_string(epoch) + "\n";
+		info += getFullName() + "_created " + to_string(epoch);
 	}
 
 	return info;

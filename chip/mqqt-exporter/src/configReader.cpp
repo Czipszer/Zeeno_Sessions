@@ -6,14 +6,26 @@
 
 using namespace nlohmann;
 
-MqttServerConfiguration MqttServerConfiguration::fromJson(const json& jsonFile) {
-	MqttServerConfiguration data;
+ConfigurationSetting ConfigurationSetting::fromJson(const json& jsonFile) {
+	ConfigurationSetting data;
+	int                  timeout;
+	int                  period;
 
-	jsonFile.at("name").get_to(data.name);
 	jsonFile.at("ipAdress").get_to(data.ipAdress);
 	jsonFile.at("port").get_to(data.port);
-	jsonFile.at("user").get_to(data.user);
-	jsonFile.at("password").get_to(data.password);
+	jsonFile.at("clientId").get_to(data.clientId);
+
+	//jsonFile.at("topic").get_to(data.topics);
+
+	data.topics.push_back("FVE_Telc/+/Total");
+	data.topics.push_back("FVE_Telc/+/Uac1");
+
+	jsonFile.at("qos").get_to(data.qos);
+	jsonFile.at("timeout").get_to(timeout);
+	jsonFile.at("period").get_to(period);
+
+	data.timeout = std::chrono::seconds(timeout);
+	data.period  = std::chrono::milliseconds(period);
 
 	return data;
 }
@@ -32,10 +44,6 @@ json loadJson(const std::string& pathToFile) {
 	return myJson;
 };
 
-std::ostream& operator<<(std::ostream& os, const MqttServerConfiguration& data) {
-	return os << "Mqtt server:" << std::endl
-	          << "\tname: \t\t" << data.name << std::endl
-	          << "\ttarget: \t" << data.ipAdress << ":" << data.port << std::endl
-	          << "\tusername: \t" << data.user << std::endl
-	          << "\tpassword: \t" << data.password << std::endl;
+std::ostream& operator<<(std::ostream& os, const ConfigurationSetting& data) {
+	return os << "Mqtt server:" << std::endl << "\ttarget: \t" << data.ipAdress << ":" << data.port << std::endl;
 };

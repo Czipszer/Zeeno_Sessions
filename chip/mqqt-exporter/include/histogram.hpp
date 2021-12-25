@@ -13,11 +13,12 @@ public:
 	Histogram() = default;
 	Histogram(std::string name, std::unordered_map<std::string, std::string> labels = {}, std::vector<double> bucket = {});
 
+	void setUnit(std::string unit) override;
+
 	void resetValue();
 	void addSample(double);
 
 	std::string getInfo() const override;
-
 	std::string getType() const override;
 
 private:

@@ -4,10 +4,9 @@
 
 using namespace std;
 
-Counter::Counter(string newName, unordered_map<string, string> newLabels, int newValue) : Metric(newName, newLabels) {
-	_type  = "counter";
-	_value = newValue;
-};
+Counter::Counter(string newName, unordered_map<string, string> newLabels, int newValue) : Metric(newName, newLabels), _value{newValue} {
+	_type = "counter";
+}
 
 void Counter::resetValue() {
 	_value = 0;

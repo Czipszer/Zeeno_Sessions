@@ -15,8 +15,10 @@ public:
 
 	virtual ~Metric() = default;
 
-	void setUnit(std::string unit);
-	void setHelp(std::string help);
+	void         setName(std::string name);
+	void         setPrefix(std::string prefix);
+	virtual void setUnit(std::string unit);
+	void         setHelp(std::string help);
 
 	std::string         getHead() const;
 	virtual std::string getInfo() const = 0;
@@ -26,6 +28,7 @@ public:
 	std::string         getHelp() const;
 
 	std::string                                  getName() const;
+	std::string                                  getPrefix() const;
 	std::string                                  getFullName() const;
 	std::unordered_map<std::string, std::string> getLabels() const;
 	Clock::time_point                            getTimestamp() const;
@@ -36,6 +39,7 @@ protected:
 	std::string _help;
 
 	std::string                                  _name;
+	std::string                                  _prefix;
 	std::unordered_map<std::string, std::string> _labels;
 	Clock::time_point                            _timestamp{};
 };

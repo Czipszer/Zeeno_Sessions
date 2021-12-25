@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.18)
 project(mqqt_exporter LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -23,8 +23,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OUT_DIR}/bin)
 set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/out/bin")
 
 include(${BUILD_DIR}/conanbuildinfo_multi.cmake)
-conan_basic_setup(NO_OUTPUT_DIRS)
-
+conan_basic_setup() #NO_OUTPUT_DIRS
+ 
 add_executable(${PROJECT_NAME} ${sourceFiles})
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/include/")
 conan_target_link_libraries(${PROJECT_NAME})

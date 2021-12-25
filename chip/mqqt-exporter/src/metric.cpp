@@ -15,7 +15,15 @@ Metric::Metric(string newName, std::unordered_map<std::string, std::string> newL
 
 	//time stamp
 	_timestamp = Clock::now();
-};
+}
+
+void Metric::setName(std::string newName) {
+	_name = newName;
+}
+
+void Metric::setPrefix(std::string newPrefix) {
+	_prefix = newPrefix;
+}
 
 void Metric::setUnit(string newUnit) {
 	_unit = newUnit;
@@ -53,6 +61,10 @@ string Metric::getName() const {
 	return _name;
 }
 
+string Metric::getPrefix() const {
+	return _prefix;
+}
+
 string Metric::getFullName() const {
 	string info;
 
@@ -60,6 +72,12 @@ string Metric::getFullName() const {
 		info = _name;
 	} else {
 		info = _name + "_" + getUnit();
+	}
+
+	if (_prefix.empty()) {
+		info = info;
+	} else {
+		info = info + "_" + getPrefix();
 	}
 
 	return info;

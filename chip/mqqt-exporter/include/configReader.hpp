@@ -4,21 +4,25 @@
 
 #	include <cstdlib>
 #	include <iostream>
+#	include <vector>
+#	include <chrono>
 
 #	include "nlohmann/json.hpp" //https://github.com/nlohmann/json
 
-struct MqttServerConfiguration {
-	std::string name;
-	std::string ipAdress;
-	uint16_t    port{80};
-	std::string user;
-	std::string password;
+struct ConfigurationSetting {
+	std::string               ipAdress{"tcp://eu1.broker.rechip.eu"};
+	std::string               port{"80"};
+	std::string               clientId;
+	std::vector<std::string>  topics;
+	int                       qos{0};
+	std::chrono::seconds      timeout;
+	std::chrono::milliseconds period;
 
-	static MqttServerConfiguration fromJson(const nlohmann::json&);
+	static ConfigurationSetting fromJson(const nlohmann::json&);
 };
 
 nlohmann::json loadJson(const std::string&);
 
-std::ostream& operator<<(std::ostream&, const MqttServerConfiguration&);
+std::ostream& operator<<(std::ostream&, const ConfigurationSetting&);
 
 #endif
