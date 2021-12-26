@@ -9,12 +9,14 @@
 class Counter : public Metric {
 public:
 	Counter() = default;
-	Counter(std::string name, std::unordered_map<std::string, std::string> labels = {}, int value = 0);
+	Counter(std::string name, std::vector<std::pair<std::string, std::string>> labels = {}, int value = 0);
 
 	void resetValue();
-	void setValue(int);
+	void setValue(int newValue);
 	int  getValue() const;
 	int  incValue();
+
+	void makeChange(std::string value) override;
 
 	std::string getInfo() const override;
 

@@ -17,8 +17,8 @@ public:
 
 	virtual ~Client();
 
-	int execution();
-
+	void setOnMessageArrivedCallback(std::function<void(std::string, std::string)> callbackFunction);
+	int  execution();
 	void finish();
 
 private:
@@ -40,6 +40,8 @@ private:
 	MQTTAsync_responseOptions   _responseOptions   = MQTTAsync_responseOptions_initializer;
 	MQTTAsync_message           _message           = MQTTAsync_message_initializer;
 	MQTTAsync_disconnectOptions _disconnectOptions = MQTTAsync_disconnectOptions_initializer;
+
+	std::function<void(std::string, std::string)> _onMessageArrivedCallback;
 };
 
 } // namespace mqtt

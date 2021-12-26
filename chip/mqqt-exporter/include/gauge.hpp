@@ -9,13 +9,15 @@
 class Gauge : public Metric {
 public:
 	Gauge() = default;
-	Gauge(std::string name, std::unordered_map<std::string, std::string> labels = {}, double value = 0);
+	Gauge(std::string name, std::vector<std::pair<std::string, std::string>> labels = {}, double value = 0);
 
 	void   resetValue();
-	void   setValue(double);
+	void   setValue(double newValue);
 	double getValue() const;
 	double incValue();
 	double decValue();
+
+	void makeChange(std::string value) override;
 
 	std::string getInfo() const override;
 

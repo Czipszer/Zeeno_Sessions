@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Gauge::Gauge(string newName, unordered_map<string, string> newLabels, double newValue) : Metric(newName, newLabels) {
+Gauge::Gauge(string newName, vector<pair<string, string>> newLabels, double newValue) : Metric(newName, newLabels) {
 	_type  = "gauge";
 	_value = newValue;
 };
@@ -29,6 +29,12 @@ double Gauge::incValue() {
 
 double Gauge::decValue() {
 	return --_value;
+}
+
+void Gauge::makeChange(std::string stringValue) {
+	double newValue{stod(stringValue)};
+
+	setValue(newValue);
 }
 
 string Gauge::getInfo() const {

@@ -1,24 +1,24 @@
 # TYPE counter_kelvin counter
 # UNIT counter_kelvin kelvin
-counter_kelvin{Teplota="pokoje",Humanity="pokoje"} 855 1640469666124
+counter_kelvin{converter="value",instance="FVE_Telc"} 855 1640560533177
 
 # TYPE histogram_celsium historgram
 # UNIT histogram_celsium celsium
-histogram_celsium_bucket{Teplota="pokoje",Humanity="pokoje",le="10.551"} 1 1640469666124
-histogram_celsium_bucket{Teplota="pokoje",le="30.1",Humanity="pokoje"} 1 1640469666125
-histogram_celsium_bucket{Teplota="pokoje",Humanity="pokoje",le="60"} 0 1640469666125
-histogram_celsium_bucket{Teplota="pokoje",le="90.143",Humanity="pokoje"} 0 1640469666125
-histogram_celsium_bucket{Teplota="pokoje",Humanity="pokoje",le="+Inf"} 1 1640469666125
-histogram_celsium_count{Teplota="pokoje",Humanity="pokoje"} 3 1640469666125
-histogram_celsium_sum{Teplota="pokoje",Humanity="pokoje"} 3 1640469666125
-histogram_celsium_created 1640469666124
+histogram_celsium_bucket{converter="value",instance="FVE_Telc",le="10.55"} 1 1640560533177
+histogram_celsium_bucket{converter="value",instance="FVE_Telc",le="30.1"} 1 1640560533177
+histogram_celsium_bucket{converter="value",instance="FVE_Telc",le="60"} 0 1640560533177
+histogram_celsium_bucket{converter="value",instance="FVE_Telc",le="90.14"} 0 1640560533177
+histogram_celsium_bucket{converter="value",instance="FVE_Telc",le="+Inf"} 1 1640560533177
+histogram_celsium_count{converter="value",instance="FVE_Telc"} 3 1640560533177
+histogram_celsium_sum{converter="value",instance="FVE_Telc"} 520 1640560533177
+histogram_celsium_created 1640560533177
 
 # TYPE summaru_faradai summary
 # UNIT summaru_faradai faradai
-summaru_faradai{quantile="0.2",Teplota="pokoje",Humanity="pokoje"} 15 1640469666125
-summaru_faradai{Teplota="pokoje",quantile="0.5",Humanity="pokoje"} 30 1640469666125
-summaru_faradai{quantile="0.9",Teplota="pokoje",Humanity="pokoje"} 40 1640469666125
-summaru_faradai_count{Teplota="pokoje",Humanity="pokoje"} 6 1640469666125
-summaru_faradai_sum{Teplota="pokoje",Humanity="pokoje"} 145 1640469666125
-summaru_faradai_created 1640469666125
+summaru_faradai{converter="value",instance="FVE_Telc",quantile="0.2"} 15 1640560533177
+summaru_faradai{converter="value",instance="FVE_Telc",quantile="0.5"} 30 1640560533177
+summaru_faradai{converter="value",instance="FVE_Telc",quantile="0.9"} 40 1640560533177
+summaru_faradai_count{converter="value",instance="FVE_Telc"} 6 1640560533177
+summaru_faradai_sum{converter="value",instance="FVE_Telc"} 145 1640560533177
+summaru_faradai_created 1640560533177
 

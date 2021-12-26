@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Metric::Metric(string newName, std::unordered_map<std::string, std::string> newLabels) {
+Metric::Metric(string newName, vector<pair<string, string>> newLabels) {
 	//name
 	_name = newName;
 
@@ -83,7 +83,7 @@ string Metric::getFullName() const {
 	return info;
 }
 
-unordered_map<string, string> Metric::getLabels() const {
+vector<pair<string, string>> Metric::getLabels() const {
 	return _labels;
 }
 

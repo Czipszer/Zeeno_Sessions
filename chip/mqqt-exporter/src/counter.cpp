@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Counter::Counter(string newName, unordered_map<string, string> newLabels, int newValue) : Metric(newName, newLabels), _value{newValue} {
+Counter::Counter(string newName, vector<pair<string, string>> newLabels, int newValue) : Metric(newName, newLabels), _value{newValue} {
 	_type = "counter";
 }
 
@@ -22,6 +22,14 @@ int Counter::getValue() const {
 
 int Counter::incValue() {
 	return ++_value;
+}
+
+void Counter::makeChange(std::string stringValue) {
+	int newValue{stoi(stringValue)};
+
+	if ((newValue - _value) > 0) {
+		setValue(newValue);
+	}
 }
 
 string Counter::getInfo() const {

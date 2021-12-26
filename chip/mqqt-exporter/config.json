@@ -5,22 +5,15 @@
     "qos": 1,
     "timeout": 3,
     "period": 1000,
-    "dataSets": {
-        "1": {
+    "dataSets": 
+        {
             "topic": "FVE_Telc/+/Total",
             "name": "power_total",
+            "labels":[{"name":"converter", "value": "@value"},{"name":"instance", "value": "FVE_Telc"}],
             "type": "counter",
-            "unit": "kW",
+            "unit": "kilowatt",
             "help": "celkova vyroba menice",
             "timestemp": 1 
-        },
-        "2": {
-            "topic": "FVE_Telc/+/Uac1",
-            "name": "voltage_AC_phase_1",
-            "type": "gauge",
-            "unit": "U",
-            "help": "napeti na prvni fazi AC strany",
-            "timestemp": 1 
-        }   
-    }
+        } 
+    
 }

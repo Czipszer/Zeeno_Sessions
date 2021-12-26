@@ -9,15 +9,17 @@
 #include "metric.hpp"
 
 using namespace std;
+using namespace std::chrono_literals;
 
-Histogram::Histogram(string newName, unordered_map<string, string> newLabels, vector<double> newBucket) : Metric(newName, newLabels) {
+Histogram::Histogram(string newName, vector<pair<string, string>> newLabels, vector<double> newBucket, chrono::minutes newWindowPeriod)
+    : Metric(newName, newLabels) {
 	_type = "historgram";
 
 	for (auto bucketLenght : newBucket) {
 		auto         bucketLabels{newLabels};
 		stringstream roundedNum;
-		roundedNum << setprecision(5) << bucketLenght;
-		bucketLabels["le"] = roundedNum.str();
+		roundedNum << setprecision(4) << bucketLenght;
+		bucketLabels.push_back(make_pair("le", roundedNum.str()));
 
 		Counter bucket(newName, bucketLabels);
 		bucket.setPrefix("bucket");
@@ -26,7 +28,7 @@ Histogram::Histogram(string newName, unordered_map<string, string> newLabels, ve
 	}
 
 	auto infLabels{newLabels};
-	infLabels["le"] = "+Inf";
+	infLabels.push_back(make_pair("le", "+Inf"));
 	Counter infBucket(newName, infLabels);
 	infBucket.setPrefix("bucket");
 	_bucket.push_back(make_pair(numeric_limits<double>::infinity(), infBucket));
@@ -38,6 +40,8 @@ Histogram::Histogram(string newName, unordered_map<string, string> newLabels, ve
 	Counter count(newName, newLabels);
 	_count = count;
 	_count.setPrefix("count");
+
+	_windowPeriod = newWindowPeriod;
 }
 
 void Histogram::setUnit(string newUnit) {
@@ -60,30 +64,49 @@ void Histogram::resetValue() {
 	_sum.resetValue();
 }
 
-void Histogram::addSample(double typeBucket) {
-	for (auto& [le, counter] : _bucket) {
-		if (le >= typeBucket) {
-			_count.incValue();
-			counter.incValue();
-			break;
-		}
-	}
+void Histogram::addSample(double sampleBucket) {
+	_sample.push_back(make_pair(sampleBucket, Clock::now()));
 
-	int sum{0};
-	for (auto& [le, counter] : _bucket) {
-		sum += counter.getValue();
+	while ((_sample.front().second) < (Clock::now() - _windowPeriod)) {
+		_sample.pop_front();
 	}
-	_sum.setValue(sum);
+}
+
+void Histogram::makeChange(std::string stringValue) {
+	double newValue{stod(stringValue)};
+
+	addSample(newValue);
 }
 
 string Histogram::getInfo() const {
 	string info;
-	for (auto& counter : _bucket | views::values) {
+
+	auto view = _sample | views::filter([this](std::pair<double, Clock::time_point> p) { return p.second >= (Clock::now() - _windowPeriod); }) | views::keys;
+	vector<double> values{view.begin(), view.end()};
+
+	auto bucket = _bucket;
+	auto count  = _count;
+	for (auto value : values) {
+		for (auto& [le, counter] : bucket) {
+			if (le >= value) {
+				count.incValue();
+				counter.incValue();
+				break;
+			}
+		}
+	}
+	for (auto& counter : bucket | views::values) {
 		info += counter.getInfo() + "\n";
 	}
+	info += count.getInfo() + "\n";
 
-	info += _count.getInfo() + "\n";
-	info += _sum.getInfo() + "\n";
+	double tempSum{0};
+	auto   sum = _sum;
+	for (auto& value : values) {
+		tempSum += value;
+	}
+	sum.setValue(static_cast<int>(tempSum));
+	info += sum.getInfo() + "\n";
 
 	auto epoch = chrono::time_point_cast<chrono::milliseconds>(_timestamp).time_since_epoch().count();
 	if (epoch > 0) {

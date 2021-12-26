@@ -16,26 +16,27 @@ MetricWriter::~MetricWriter() {
 }
 
 void MetricWriter::periodicWrite() {
-	fstream file;
-
-	file.open(_nameFile, fstream::binary | fstream::trunc | fstream::out);
-
-	if (!file.is_open()) {
-		throw FileExcept("Unable to open file", -10);
-	}
-
-	for (auto metric : *_metrics) {
-		file << metric->getHead() << metric->getInfo() << endl << endl;
-	}
+	//fstream file;
 
 	_worker = jthread([this](std::stop_token token) {
 		while (!token.stop_requested()) {
-			//std::cout << "Metrics was writed to output file" << std::endl;
+			_file.open(_nameFile, fstream::binary | fstream::trunc | fstream::out);
+
+			if (!_file.is_open()) {
+				throw FileExcept("Unable to open file", -10);
+			}
+
+			for (auto metric : *_metrics) {
+				_file << metric->getHead() << metric->getInfo() << endl << endl;
+			}
+
+			_file.close();
+
+			cout << endl << "Metrics was writed to output file" << endl << endl;
 
 			this_thread::sleep_for(_writePeriod);
 		}
 	});
-	file.close();
 }
 
 void MetricWriter::finish() {

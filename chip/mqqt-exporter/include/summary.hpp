@@ -13,15 +13,17 @@
 class Summary : public Metric {
 public:
 	Summary(
-	    std::string                                  name,
-	    std::unordered_map<std::string, std::string> labels       = {},
-	    std::vector<double>                          quantiles    = {},
-	    std::chrono::minutes                         windowPeriod = std::chrono::minutes(5));
+	    std::string                                      name,
+	    std::vector<std::pair<std::string, std::string>> labels       = {},
+	    std::vector<double>                              quantiles    = {},
+	    std::chrono::minutes                             windowPeriod = std::chrono::minutes(5));
 
 	void setUnit(std::string unit) override;
 
 	void resetValue();
 	void addSample(double);
+
+	void makeChange(std::string value) override;
 
 	std::string getInfo() const override;
 

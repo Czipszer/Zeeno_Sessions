@@ -6,6 +6,7 @@
 #	include <memory>
 #	include <chrono>
 #	include <thread>
+#	include <fstream>
 
 #	include "metric.hpp"
 
@@ -25,6 +26,7 @@ private:
 	std::shared_ptr<std::vector<std::shared_ptr<Metric>>> _metrics;
 	std::chrono::seconds                                  _writePeriod;
 	std::jthread                                          _worker;
+	std::fstream                                          _file;
 	static std::atomic_bool                               _terninate;
 };
 

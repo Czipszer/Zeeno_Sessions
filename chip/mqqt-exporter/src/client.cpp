@@ -5,7 +5,7 @@
 #include <thread>
 
 #include "mqtt/client.hpp"
-#include "myEXception.hpp"
+#include "myException.hpp"
 
 using namespace std;
 
@@ -20,13 +20,9 @@ mqtt::Client::Client(ConfigurationSetting newConfigurationData) : _cofinguration
 mqtt::Client::~Client() {
 }
 
-void mqtt::Client::finish() {
-	mqttFinished  = 1;
-	mqttConnected = 1;
-}
-
 void mqtt::Client::connlost(void* context, char* cause) {
-	MQTTAsync                client         = (MQTTAsync) context;
+	//MQTTAsync                client         = (MQTTAsync) context;
+	Client*                  This           = static_cast<Client*>(context);
 	MQTTAsync_connectOptions connectOptions = MQTTAsync_connectOptions_initializer;
 	int                      returnCode;
 
@@ -37,7 +33,7 @@ void mqtt::Client::connlost(void* context, char* cause) {
 	connectOptions.keepAliveInterval = 20;
 	connectOptions.cleansession      = 1;
 
-	if ((returnCode = MQTTAsync_connect(client, &connectOptions)) != MQTTASYNC_SUCCESS) {
+	if ((returnCode = MQTTAsync_connect(This->_client, &connectOptions)) != MQTTASYNC_SUCCESS) {
 		cout << "Failed to start connect, return code" << returnCode;
 
 		mqttFinished = 1;
@@ -67,39 +63,47 @@ void mqtt::Client::onSend(void* /*context*/, MQTTAsync_successData* response) {
 }
 
 void mqtt::Client::onConnectFailure(void* /*context*/, MQTTAsync_failureData* response) {
-	cout << "Connect failed, returnCode " << response->code << endl;
+	cout << "Connect failed, returnCode " << response->code << endl << endl;
 
 	mqttFinished = 1;
 }
 
 void mqtt::Client::onConnect(void* /*context*/, MQTTAsync_successData* /*response*/) {
 	//Client* This = static_cast<Client*>(context);
-	cout << "Successful connection" << endl;
+	cout << "Successful connection" << endl << endl;
+	;
 
 	mqttConnected = 1;
 }
 
 void onSubscribeFailure(void* /*context*/, MQTTAsync_failureData* response) {
-	cout << "Subscribe failed, returnCode " << response->code << endl;
+	cout << "Subscribe failed, returnCode " << response->code << endl << endl;
 
 	mqttFinished = 1;
 }
 
 void onSubscribe(void* /*context*/, MQTTAsync_successData* /*response*/) {
-	cout << "Subscribe succeeded" << endl;
+	cout << "Subscribe succeeded" << endl << endl;
 
 	mqttSubscribed = 1;
 }
 
-int mqtt::Client::messageArrived(void* /*context*/, char* topicName, int /*topicLen*/, MQTTAsync_message* message) {
-	cout << "Message arrived" << endl;
-	cout << "topic: " << topicName << endl;
-	cout << "message: " << static_cast<char*>(message->payload) << endl << endl;
+int mqtt::Client::messageArrived(void* context, char* topicName, int /*topicLen*/, MQTTAsync_message* message) {
+	Client* This = static_cast<Client*>(context);
+
+	cout << "Message arrived:" << endl;
+	cout << topicName << " " << static_cast<char*>(message->payload) << endl << endl;
+
+	This->_onMessageArrivedCallback(topicName, static_cast<char*>(message->payload));
 
 	MQTTAsync_freeMessage(&message);
 	MQTTAsync_free(topicName);
 
 	return 1;
+}
+
+void mqtt::Client::setOnMessageArrivedCallback(std::function<void(std::string, std::string)> callbackFunction) {
+	_onMessageArrivedCallback = callbackFunction;
 }
 
 int mqtt::Client::execution() {
@@ -111,7 +115,7 @@ int mqtt::Client::execution() {
 		return _returnCode;
 	}
 
-	if ((_returnCode = MQTTAsync_setCallbacks(_client, _client, connlost, messageArrived, NULL)) != MQTTASYNC_SUCCESS) {
+	if ((_returnCode = MQTTAsync_setCallbacks(_client, this /*_client*/, connlost, messageArrived, NULL)) != MQTTASYNC_SUCCESS) {
 		cout << "Failed to set callback, return code " << _returnCode << endl;
 		_returnCode = EXIT_FAILURE;
 		MQTTAsync_destroy(&_client);
@@ -203,4 +207,9 @@ int mqtt::Client::execution() {
 			return _returnCode;
 		}
 	});
+}
+
+void mqtt::Client::finish() {
+	mqttFinished  = 1;
+	mqttConnected = 1;
 }

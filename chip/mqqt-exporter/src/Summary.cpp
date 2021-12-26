@@ -12,7 +12,7 @@
 using namespace std;
 using namespace std::chrono_literals;
 
-Summary::Summary(string newName, unordered_map<string, string> newLabels, vector<double> newQuantiles, chrono::minutes newWindowPeriod)
+Summary::Summary(string newName, vector<pair<string, string>> newLabels, vector<double> newQuantiles, chrono::minutes newWindowPeriod)
     : Metric(newName, newLabels) {
 	_type = "summary";
 
@@ -20,7 +20,7 @@ Summary::Summary(string newName, unordered_map<string, string> newLabels, vector
 		auto         quantilesLabels{newLabels};
 		stringstream roundedNum;
 		roundedNum << setprecision(4) << quantilesLenght;
-		quantilesLabels["quantile"] = roundedNum.str();
+		quantilesLabels.push_back(make_pair("quantile", roundedNum.str()));
 
 		Gauge quantile(newName, quantilesLabels);
 
@@ -64,6 +64,12 @@ void Summary::addSample(double sampleQuantile) {
 	while ((_queue.front().second) < (Clock::now() - _windowPeriod)) {
 		_queue.pop_front();
 	}
+}
+
+void Summary::makeChange(std::string stringValue) {
+	double newValue{stod(stringValue)};
+
+	addSample(newValue);
 }
 
 string Summary::getInfo() const {
