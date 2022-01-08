@@ -5,7 +5,7 @@
     "qos": 1,
     "timeout": 3,
     "period": 1000,
-    "dataSets": 
+    "dataSets": [ 
         {
             "topic": "FVE_Telc/+/Total",
             "name": "power_total",
@@ -14,6 +14,15 @@
             "unit": "kilowatt",
             "help": "celkova vyroba menice",
             "timestemp": 1 
-        } 
+        },
+        {
+            "topic": "FVE_Telc/+/Uac1",
+            "name": "voltage_ac",
+            "labels":[{"name":"converter", "value": "@value"},{"name":"instance", "value": "FVE_Telc"},{"name":"phase", "value": "1"}],
+            "type": "gauge",
+            "unit": "volt",
+            "help": "napeti na prvni fazi AC strany",
+            "timestemp": 1 
+        }] 
     
 }

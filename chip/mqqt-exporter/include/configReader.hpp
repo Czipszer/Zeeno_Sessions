@@ -23,12 +23,11 @@ class ConfigurationSetting {
 public:
 	static ConfigurationSetting fromJson(const nlohmann::json&);
 
-	std::string              ipAdress{"tcp://eu1.broker.rechip.eu"};
-	std::string              port{"80"};
-	std::string              clientId;
-	std::vector<std::string> topics;
-	//std::vector<MetricsData>  dataSets;
-	MetricsData               dataSets;
+	std::string               ipAdress{"tcp://eu1.broker.rechip.eu"};
+	std::string               port{"80"};
+	std::string               clientId;
+	std::vector<std::string>  topics;
+	std::vector<MetricsData>  dataSets;
 	int                       qos{0};
 	std::chrono::seconds      timeout;
 	std::chrono::milliseconds period;

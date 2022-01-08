@@ -23,7 +23,7 @@ int main() {
 		json                 configFile = loadJson("config.json");
 		ConfigurationSetting data{ConfigurationSetting::fromJson(configFile)};
 		std::cout << data << std::endl;
-		/*
+
 		// vytvoreni labels
 		std::vector<std::pair<std::string, std::string>> labels = {{"converter", "value"}, {"instance", "FVE_Telc"}};
 		// test counter
@@ -81,7 +81,7 @@ int main() {
 		std::cin.get();
 		mqttClient.finish();
 		writer.finish();
-*/
+
 		return EXIT_SUCCESS;
 	} catch (const FileExcept& e) {
 		std::cerr << "Error number: " << e.getErrorNumber() << std::endl << e.what() << std::endl;
