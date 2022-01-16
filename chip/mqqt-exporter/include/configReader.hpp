@@ -16,7 +16,8 @@ struct MetricsData {
 	std::string                                      type;
 	std::string                                      unit;
 	std::string                                      help;
-	int                                              timestemp{0};
+	std::vector<double>                              bucketsOrQuantiles;
+	bool                                             timestemp{true};
 };
 
 class ConfigurationSetting {
@@ -30,7 +31,8 @@ public:
 	std::vector<MetricsData>  dataSets;
 	int                       qos{0};
 	std::chrono::seconds      timeout;
-	std::chrono::milliseconds period;
+	std::chrono::milliseconds periodWait;
+	std::chrono::seconds      periodWrite;
 };
 
 nlohmann::json loadJson(const std::string&);

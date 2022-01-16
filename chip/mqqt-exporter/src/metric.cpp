@@ -33,6 +33,10 @@ void Metric::setHelp(string newHelp) {
 	_help = newHelp;
 }
 
+void Metric::enableTimestamp(bool newState) {
+	_timestampState = newState;
+}
+
 string Metric::getHead() const {
 	std::stringstream info;
 

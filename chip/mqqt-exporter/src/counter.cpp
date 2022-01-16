@@ -53,9 +53,11 @@ string Counter::getInfo() const {
 
 	info = info + " " + to_string(_value);
 
-	auto epoch = chrono::time_point_cast<chrono::milliseconds>(_timestamp).time_since_epoch().count();
-	if (epoch > 0) {
-		info = info + " " + to_string(epoch);
+	if (_timestampState) {
+		auto epoch = chrono::time_point_cast<chrono::milliseconds>(_timestamp).time_since_epoch().count();
+		if (epoch > 0) {
+			info = info + " " + to_string(epoch);
+		}
 	}
 
 	return info;

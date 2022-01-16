@@ -22,6 +22,8 @@ public:
 	virtual void setUnit(std::string unit);
 	void         setHelp(std::string help);
 
+	virtual void enableTimestamp(bool state);
+
 	std::string         getHead() const;
 	virtual std::string getInfo() const = 0;
 
@@ -43,6 +45,7 @@ protected:
 	std::string                                      _name;
 	std::string                                      _prefix;
 	std::vector<std::pair<std::string, std::string>> _labels;
+	bool                                             _timestampState{true};
 	Clock::time_point                                _timestamp{};
 };
 

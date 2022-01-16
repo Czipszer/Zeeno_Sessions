@@ -60,11 +60,12 @@ string Gauge::getInfo() const {
 	roundedNum << setprecision(6) << _value;
 	info = info + " " + roundedNum.str();
 
-	auto epoch = chrono::time_point_cast<chrono::milliseconds>(_timestamp).time_since_epoch().count();
-	if (epoch > 0) {
-		info = info + " " + to_string(epoch);
+	if (_timestampState) {
+		auto epoch = chrono::time_point_cast<chrono::milliseconds>(_timestamp).time_since_epoch().count();
+		if (epoch > 0) {
+			info = info + " " + to_string(epoch);
+		}
 	}
-
 	return info;
 }
 

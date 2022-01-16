@@ -49,6 +49,17 @@ void Summary::setUnit(string newUnit) {
 	}
 }
 
+void Summary::enableTimestamp(bool newState) {
+	Metric::enableTimestamp(newState);
+
+	_count.enableTimestamp(newState);
+	_sum.enableTimestamp(newState);
+
+	for (auto& gauge : _quantiles | views::values) {
+		gauge.enableTimestamp(newState);
+	}
+}
+
 void Summary::resetValue() {
 	for (auto& [quantile, gauge] : _quantiles) {
 		gauge.resetValue();
@@ -104,9 +115,11 @@ string Summary::getInfo() const {
 	sum.setValue(sumSummary);
 	info += sum.getInfo() + "\n";
 
-	auto epoch = chrono::time_point_cast<chrono::milliseconds>(_timestamp).time_since_epoch().count();
-	if (epoch > 0) {
-		info += getFullName() + "_created " + to_string(epoch);
+	if (_timestampState) {
+		auto epoch = chrono::time_point_cast<chrono::milliseconds>(_timestamp).time_since_epoch().count();
+		if (epoch > 0) {
+			info += getFullName() + "_created " + to_string(epoch);
+		}
 	}
 
 	return info;

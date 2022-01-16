@@ -55,6 +55,17 @@ void Histogram::setUnit(string newUnit) {
 	}
 }
 
+void Histogram::enableTimestamp(bool newState) {
+	Metric::enableTimestamp(newState);
+
+	_count.enableTimestamp(newState);
+	_sum.enableTimestamp(newState);
+
+	for (auto& gauge : _bucket | views::values) {
+		gauge.enableTimestamp(newState);
+	}
+}
+
 void Histogram::resetValue() {
 	for (auto& counter : _bucket | views::values) {
 		counter.resetValue();
@@ -108,9 +119,11 @@ string Histogram::getInfo() const {
 	sum.setValue(static_cast<int>(tempSum));
 	info += sum.getInfo() + "\n";
 
-	auto epoch = chrono::time_point_cast<chrono::milliseconds>(_timestamp).time_since_epoch().count();
-	if (epoch > 0) {
-		info += getFullName() + "_created " + to_string(epoch);
+	if (_timestampState) {
+		auto epoch = chrono::time_point_cast<chrono::milliseconds>(_timestamp).time_since_epoch().count();
+		if (epoch > 0) {
+			info += getFullName() + "_created " + to_string(epoch);
+		}
 	}
 
 	return info;

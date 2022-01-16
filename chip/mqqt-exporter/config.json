@@ -4,7 +4,8 @@
     "clientId": "ExampleClientChip",
     "qos": 1,
     "timeout": 3,
-    "period": 1000,
+    "periodWait": 1000,
+    "periodWrite": 10,
     "dataSets": [ 
         {
             "topic": "FVE_Telc/+/Total",
@@ -13,7 +14,8 @@
             "type": "counter",
             "unit": "kilowatt",
             "help": "celkova vyroba menice",
-            "timestemp": 1 
+            "bucketsOrQuantiles": [0],
+            "timestemp": true 
         },
         {
             "topic": "FVE_Telc/+/Uac1",
@@ -22,7 +24,8 @@
             "type": "gauge",
             "unit": "volt",
             "help": "napeti na prvni fazi AC strany",
-            "timestemp": 1 
+            "bucketsOrQuantiles": [0.2, 0.5, 0.9],
+            "timestemp": true 
         }] 
     
 }

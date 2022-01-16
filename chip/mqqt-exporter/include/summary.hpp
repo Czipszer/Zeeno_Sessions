@@ -20,6 +20,8 @@ public:
 
 	void setUnit(std::string unit) override;
 
+	void enableTimestamp(bool state) override;
+
 	void resetValue();
 	void addSample(double);
 

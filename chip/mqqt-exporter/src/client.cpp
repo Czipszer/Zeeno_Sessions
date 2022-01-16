@@ -165,11 +165,11 @@ int mqtt::Client::execution() {
 				mqttFinished = 1;
 			}
 
-			this_thread::sleep_for(chrono::milliseconds(100));
+			this_thread::sleep_for(chrono::milliseconds(10));
 		}
 
 		while (!mqttFinished) {
-			this_thread::sleep_for(_cofinguration.period);
+			this_thread::sleep_for(_cofinguration.periodWait);
 		}
 
 		if (mqttFinished) {
