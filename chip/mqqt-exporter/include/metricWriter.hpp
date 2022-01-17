@@ -8,12 +8,12 @@
 #	include <thread>
 #	include <fstream>
 
+#	include "businessLogic.hpp"
 #	include "metric.hpp"
 
 class MetricWriter {
 public:
-	MetricWriter(
-	    std::string nameFile, std::shared_ptr<std::vector<std::shared_ptr<Metric>>> metrics, std::chrono::seconds writePeriod = std::chrono::seconds(10));
+	MetricWriter(std::string nameFile, std::shared_ptr<Metrics> metrics, std::chrono::seconds writePeriod = std::chrono::seconds(10));
 
 	virtual ~MetricWriter();
 
@@ -22,12 +22,12 @@ public:
 	void finish();
 
 private:
-	std::string                                           _nameFile;
-	std::shared_ptr<std::vector<std::shared_ptr<Metric>>> _metrics;
-	std::chrono::seconds                                  _writePeriod;
-	std::jthread                                          _worker;
-	std::fstream                                          _file;
-	static std::atomic_bool                               _terninate;
+	std::string              _nameFile;
+	std::shared_ptr<Metrics> _metrics;
+	std::chrono::seconds     _writePeriod;
+	std::jthread             _worker;
+	std::fstream             _file;
+	static std::atomic_bool  _terninate;
 };
 
 #endif

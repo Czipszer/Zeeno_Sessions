@@ -1,0 +1,38 @@
+# TYPE power_total_kilowatt counter
+# UNIT power_total_kilowatt kilowatt
+# HELP power_total_kilowatt celkova vyroba menice
+power_total_kilowatt{converter="3",instance="FVE_Telc"} 1301134 1642453434235
+power_total_kilowatt{converter="4",instance="FVE_Telc"} 1370000 1642453435318
+power_total_kilowatt{converter="5",instance="FVE_Telc"} 1498627 1642453436420
+power_total_kilowatt{converter="6",instance="FVE_Telc"} 1360938 1642453437524
+power_total_kilowatt{converter="7",instance="FVE_Telc"} 1357860 1642453438633
+power_total_kilowatt{converter="8",instance="FVE_Telc"} 548086 1642453439734
+power_total_kilowatt{converter="9",instance="FVE_Telc"} 828522 1642453440833
+power_total_kilowatt{converter="10",instance="FVE_Telc"} 943592 1642453441927
+power_total_kilowatt{converter="11",instance="FVE_Telc"} 13494829 1642453443214
+power_total_kilowatt{converter="12",instance="FVE_Telc"} 13061045 1642453444119
+power_total_kilowatt{converter="13",instance="FVE_Telc"} 13029129 1642453445219
+power_total_kilowatt{converter="14",instance="FVE_Telc"} 12982801 1642453446325
+power_total_kilowatt{converter="15",instance="FVE_Telc"} 13982507 1642453447432
+power_total_kilowatt{converter="16",instance="FVE_Telc"} 13500127 1642453448523
+power_total_kilowatt{converter="17",instance="FVE_Telc"} 13498105 1642453449624
+
+# TYPE voltage_ac_volt gauge
+# UNIT voltage_ac_volt volt
+# HELP voltage_ac_volt napeti na prvni fazi AC strany
+voltage_ac_volt{converter="2",instance="FVE_Telc",phase="1"} 0 1642453433526
+voltage_ac_volt{converter="3",instance="FVE_Telc",phase="1"} 0 1642453434630
+voltage_ac_volt{converter="4",instance="FVE_Telc",phase="1"} 0 1642453435722
+voltage_ac_volt{converter="5",instance="FVE_Telc",phase="1"} 0 1642453436825
+voltage_ac_volt{converter="6",instance="FVE_Telc",phase="1"} 0 1642453437927
+voltage_ac_volt{converter="7",instance="FVE_Telc",phase="1"} 0 1642453439029
+voltage_ac_volt{converter="8",instance="FVE_Telc",phase="1"} 0 1642453440133
+voltage_ac_volt{converter="9",instance="FVE_Telc",phase="1"} 0 1642453441220
+voltage_ac_volt{converter="10",instance="FVE_Telc",phase="1"} 0 1642453442322
+voltage_ac_volt{converter="11",instance="FVE_Telc",phase="1"} 0 1642453443422
+voltage_ac_volt{converter="12",instance="FVE_Telc",phase="1"} 0 1642453444533
+voltage_ac_volt{converter="13",instance="FVE_Telc",phase="1"} 0 1642453445619
+voltage_ac_volt{converter="14",instance="FVE_Telc",phase="1"} 0 1642453446725
+voltage_ac_volt{converter="15",instance="FVE_Telc",phase="1"} 0 1642453447821
+voltage_ac_volt{converter="16",instance="FVE_Telc",phase="1"} 0 1642453448927
+voltage_ac_volt{converter="17",instance="FVE_Telc",phase="1"} 0 1642453450035

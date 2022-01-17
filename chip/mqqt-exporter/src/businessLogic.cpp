@@ -17,11 +17,11 @@
 using namespace std;
 
 BusinessLogic::BusinessLogic(const vector<MetricsData>& newDataSets) {
-	_metrics  = make_shared<vector<shared_ptr<Metric>>>();
+	_metrics  = make_shared<Metrics>();
 	_dataSets = newDataSets;
 }
 
-shared_ptr<vector<shared_ptr<Metric>>> BusinessLogic::getMetrics() {
+shared_ptr<Metrics> BusinessLogic::getMetrics() {
 	return _metrics;
 }
 
@@ -58,12 +58,15 @@ void BusinessLogic::processMessage(const string& topic, const string& value) {
 			}
 
 			bool metricExist{false};
+			{
+				scoped_lock lock{_metrics->mutex};
 
-			for (auto& metric : *_metrics) {
-				if (dataSet.name == metric->getName() && dataSet.labels == metric->getLabels()) {
-					metric->makeChange(value);
-					metricExist = true;
-					break;
+				for (auto& metric : _metrics->metrics) {
+					if (dataSet.name == metric->getName() && dataSet.labels == metric->getLabels()) {
+						metric->makeChange(value);
+						metricExist = true;
+						break;
+					}
 				}
 			}
 
@@ -84,7 +87,9 @@ void BusinessLogic::createMetric(const MetricsData& dataSet, const double& value
 		newMetric->setUnit(dataSet.unit);
 		newMetric->enableTimestamp(dataSet.timestemp);
 
-		_metrics->push_back(newMetric);
+		scoped_lock lock{_metrics->mutex};
+
+		_metrics->metrics.push_back(newMetric);
 	}
 
 	if (dataSet.type == "gauge") {
@@ -94,7 +99,9 @@ void BusinessLogic::createMetric(const MetricsData& dataSet, const double& value
 		newMetric->setUnit(dataSet.unit);
 		newMetric->enableTimestamp(dataSet.timestemp);
 
-		_metrics->push_back(newMetric);
+		scoped_lock lock{_metrics->mutex};
+
+		_metrics->metrics.push_back(newMetric);
 	}
 
 	if (dataSet.type == "summary") {
@@ -106,7 +113,9 @@ void BusinessLogic::createMetric(const MetricsData& dataSet, const double& value
 		newMetric->setUnit(dataSet.unit);
 		newMetric->enableTimestamp(dataSet.timestemp);
 
-		_metrics->push_back(newMetric);
+		scoped_lock lock{_metrics->mutex};
+
+		_metrics->metrics.push_back(newMetric);
 	}
 
 	if (dataSet.type == "histogram") {
@@ -118,6 +127,8 @@ void BusinessLogic::createMetric(const MetricsData& dataSet, const double& value
 		newMetric->setUnit(dataSet.unit);
 		newMetric->enableTimestamp(dataSet.timestemp);
 
-		_metrics->push_back(newMetric);
+		scoped_lock lock{_metrics->mutex};
+
+		_metrics->metrics.push_back(newMetric);
 	}
 }

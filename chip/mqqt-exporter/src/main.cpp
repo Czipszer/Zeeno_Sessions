@@ -6,10 +6,12 @@
 #include "counter.hpp"
 #include "gauge.hpp"
 #include "histogram.hpp"
+#include "metric.hpp"
 #include "metricWriter.hpp"
 #include "mqtt/client.hpp"
 #include "myException.hpp"
 #include "summary.hpp"
+
 
 using namespace nlohmann;
 

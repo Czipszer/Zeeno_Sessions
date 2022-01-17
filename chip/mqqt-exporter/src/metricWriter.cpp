@@ -1,14 +1,16 @@
+#include <algorithm>
 #include <chrono>
 #include <fstream>
 #include <iostream>
 #include <string>
 
+#include "metric.hpp"
 #include "metricWriter.hpp"
 #include "myEXception.hpp"
 
 using namespace std;
 
-MetricWriter::MetricWriter(string newNameFile, shared_ptr<vector<shared_ptr<Metric>>> newMetrics, chrono::seconds newWritePeriod)
+MetricWriter::MetricWriter(string newNameFile, shared_ptr<Metrics> newMetrics, chrono::seconds newWritePeriod)
     : _nameFile{newNameFile}, _metrics{newMetrics}, _writePeriod{newWritePeriod} {
 }
 
@@ -26,8 +28,26 @@ void MetricWriter::periodicWrite() {
 				throw FileExcept("Unable to open file", -10);
 			}
 
-			for (auto metric : *_metrics) {
-				_file << metric->getHead() << metric->getInfo() << endl << endl;
+			{
+				scoped_lock lock{_metrics->mutex};
+
+				sort(_metrics->metrics.begin(), _metrics->metrics.end(), [](shared_ptr<Metric> a, shared_ptr<Metric> b) { return a->getName() < b->getName(); });
+
+				string memoryName;
+
+				for (auto metric : _metrics->metrics) {
+					if (memoryName != metric->getName()) {
+						if (!memoryName.empty()) {
+							_file << endl;
+						}
+
+						_file << metric->getHead();
+					}
+
+					_file << metric->getInfo() << endl;
+
+					memoryName = metric->getName();
+				}
 			}
 
 			_file.close();
