@@ -6,7 +6,7 @@ nlohmann_json/3.10.2
 cmake_multi
 
 [options]
-
+paho-mqtt-c:shared=True
 
 [imports]
 bin, *.dll -> ./out/bin

@@ -1,0 +1,31 @@
+{
+    "ipAdress": "tcp://eu1.broker.rechip.eu",
+    "port": "11009",
+    "clientId": "ExampleClientChip",
+    "qos": 1,
+    "timeout": 3,
+    "periodWait": 1000,
+    "periodWrite": 10,
+    "dataSets": [ 
+        {
+            "topic": "FVE_Telc/+/Total",
+            "name": "power_total",
+            "labels":[{"name":"converter", "value": "@value"},{"name":"instance", "value": "FVE_Telc"}],
+            "type": "counter",
+            "unit": "kilowatt",
+            "help": "celkova vyroba menice",
+            "bucketsOrQuantiles": [0],
+            "timestemp": true 
+        },
+        {
+            "topic": "FVE_Telc/+/Uac1",
+            "name": "voltage_ac",
+            "labels":[{"name":"converter", "value": "@value"},{"name":"instance", "value": "FVE_Telc"},{"name":"phase", "value": "1"}],
+            "type": "gauge",
+            "unit": "volt",
+            "help": "napeti na prvni fazi AC strany",
+            "bucketsOrQuantiles": [0.2, 0.5, 0.9],
+            "timestemp": true 
+        }] 
+    
+}
